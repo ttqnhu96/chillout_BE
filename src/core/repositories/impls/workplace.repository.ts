@@ -8,7 +8,7 @@ import { IWorkplaceRepository } from "../iworkplace.repository";
 @Injectable()
 export class WorkplaceRepository extends BaseRepository implements IWorkplaceRepository {
     private readonly _logger = new Logger(WorkplaceRepository.name);
-    constructor(@InjectRepository(ENTITIES_CONFIG.SCHOOL) private readonly repos: Repository<ObjectLiteral>) {
+    constructor(@InjectRepository(ENTITIES_CONFIG.WORKPLACE) private readonly repos: Repository<ObjectLiteral>) {
         super(repos);
         this._logger.log("============== Constructor WorkplaceRepository ==============");
     }

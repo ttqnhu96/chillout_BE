@@ -18,4 +18,10 @@ export interface IBaseRepository {
      * @param orderBy 
      */
     findAll(orderBy?: any): Promise<any[]>;
+
+    /**
+     * create
+     * @param data 
+     */
+    create(data: any | any): Promise<any>;
 }

@@ -1,4 +1,9 @@
+export enum APP_CONSTANTS {
+    USER_KEY = 'user_key',
+}
+
 export const COMMON_CONSTANTS = {
+    TIMEZONE:'UTC',
 }
 
 export enum ORDER_BY {

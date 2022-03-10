@@ -1,6 +1,6 @@
 import { Logger } from "@nestjs/common";
 import { ErrorMap } from "../../common/error.map";
-import { ResponseDto } from "../../dtos/response.dto";
+import { ResponseDto } from "../../dtos/responses/response.dto";
 import { IBaseService } from "../ibase.service";
 
 export class BaseService implements IBaseService {
@@ -41,6 +41,17 @@ export class BaseService implements IBaseService {
     public async findAll(orderBy?: any): Promise<ResponseDto> {
         const response = new ResponseDto();
         const result = await this._repos.findAll(orderBy);
+        return response.return(ErrorMap.SUCCESSFUL.Code, result);
+    }
+
+    /**
+     * create
+     * @param data 
+     * @returns 
+     */
+    public async create<T>(data: T | any): Promise<ResponseDto> {
+        const response = new ResponseDto();
+        const result = await this._repos.create(data);
         return response.return(ErrorMap.SUCCESSFUL.Code, result);
     }
 }

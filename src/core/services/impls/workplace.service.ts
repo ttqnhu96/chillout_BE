@@ -2,7 +2,7 @@ import { Inject, Injectable, Logger } from "@nestjs/common";
 import { ORDER_BY } from "../../common/constants/common.constant";
 import { ErrorMap } from "../../common/error.map";
 import { REPOSITORY_INTERFACE } from "../../config/module.config";
-import { ResponseDto } from "../../dtos/response.dto";
+import { ResponseDto } from "../../dtos/responses/response.dto";
 import { BaseService } from "./base.service";
 import { IWorkplaceService } from "../iworkplace.service";
 import { IWorkplaceRepository } from "src/core/repositories/iworkplace.repository";

@@ -13,12 +13,16 @@ import { CollegeRepository } from "./repositories/impls/college.repository";
 import { WorkplaceRepository } from "./repositories/impls/workplace.repository";
 import { CollegeService } from "./services/impls/college.service";
 import { WorkplaceService } from "./services/impls/workplace.service";
+import { UserService } from "./services/impls/user.service";
+import { UserRepository } from "./repositories/impls/user.repository";
+import { UserController } from "./controllers/user.controller";
 
 const controllers = [
     CityController,
     SchoolController,
     CollegeController,
-    WorkplaceController
+    WorkplaceController,
+    UserController
 ];
 
 const entities = [
@@ -26,6 +30,7 @@ const entities = [
     ENTITIES_CONFIG.SCHOOL,
     ENTITIES_CONFIG.COLLEGE,
     ENTITIES_CONFIG.WORKPLACE,
+    ENTITIES_CONFIG.USER
 ]
 
 const providers= [
@@ -54,6 +59,10 @@ const providers= [
             provide: REPOSITORY_INTERFACE.IWORKPLACE_REPOSITORY,
             useClass: WorkplaceRepository
         },
+        {
+            provide: REPOSITORY_INTERFACE.IUSER_REPOSITORY,
+            useClass: UserRepository
+        },
 
         //service
         {
@@ -71,6 +80,10 @@ const providers= [
         {
             provide: SERVICE_INTERFACE.IWORKPLACE_SERVICE,
             useClass: WorkplaceService
+        },
+        {
+            provide: SERVICE_INTERFACE.IUSER_SERVICE,
+            useClass: UserService
         },
         //Provider
 

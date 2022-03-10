@@ -1,4 +1,4 @@
-import { ResponseDto } from "../dtos/response.dto";
+import { ResponseDto } from "../dtos/responses/response.dto";
 
 export interface IBaseService {
 
@@ -20,4 +20,10 @@ export interface IBaseService {
      * @param orderBy 
      */
     findAll(orderBy?: any): Promise<ResponseDto>;
+
+    /**
+     * create
+     * @param data 
+     */
+    create<T>(data: T | any): Promise<ResponseDto>;
 }

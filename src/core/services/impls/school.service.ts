@@ -3,7 +3,7 @@ import { ORDER_BY } from "../../common/constants/common.constant";
 import { ErrorMap } from "../../common/error.map";
 import { REPOSITORY_INTERFACE } from "../../config/module.config";
 import { ISchoolRepository } from "../../repositories/ischool.repository";
-import { ResponseDto } from "../../dtos/response.dto";
+import { ResponseDto } from "../../dtos/responses/response.dto";
 import { BaseService } from "./base.service";
 import { ISchoolService } from "../ischool.service";
 

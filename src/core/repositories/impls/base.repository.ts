@@ -1,11 +1,13 @@
 import { Repository } from "typeorm";
 import { Logger } from "@nestjs/common";
 import { IBaseRepository } from "../ibase.repository";
+import { CommonUtil } from "../../utils/common.util";
 
 export class BaseRepository implements IBaseRepository {
 
     private _repos: Repository<any>;
     private _log = new Logger(BaseRepository.name);
+    private _commonUtil: CommonUtil = new CommonUtil();
 
     public constructor(repos) {
         this._repos = repos;
@@ -48,6 +50,20 @@ export class BaseRepository implements IBaseRepository {
             return await this._repos.find();
         }
 
+    }
+
+    /**
+     * create
+     * @param data 
+     * @returns 
+     */
+    public async create(data: any): Promise<any> {
+        const username = await this._commonUtil.getUsername();
+        data.createdAt = this._commonUtil.currentDate();
+        data.updatedAt = data.createdAt;
+        data.createdBy = username;
+        data.updatedBy = username;
+        return await this._repos.save(data);
     }
 
     private convertObjectToJson(obj: any) {

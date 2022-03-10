@@ -3,7 +3,7 @@ import { ORDER_BY } from "../../common/constants/common.constant";
 import { ErrorMap } from "../../common/error.map";
 import { REPOSITORY_INTERFACE } from "../../config/module.config";
 import { ICityRepository } from "../../repositories/icity.repository";
-import { ResponseDto } from "../../../core/dtos/response.dto";
+import { ResponseDto } from "../../dtos/responses/response.dto";
 import { ICityService } from "../icity.service";
 import { BaseService } from "./base.service";
 

@@ -3,9 +3,12 @@ import { Column, Entity } from "typeorm";
 import { USER_STATUS_ENUM, USER_TYPE_ENUM } from "../common/constants/common.constant";
 
 @Entity({ name: 'user' })
-export class User extends BaseEntityAutoId {
+export class UserEntity extends BaseEntityAutoId {
     @Column({ name: 'username' })
     username: string;
+
+    @Column({ name: 'password' })
+    password: string;
 
     @Column({
         type: 'enum',

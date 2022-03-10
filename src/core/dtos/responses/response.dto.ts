@@ -1,4 +1,4 @@
-import { ErrorMap } from "../common/error.map";
+import { ErrorMap } from "../../common/error.map";
 
 
 export class ResponseDto {

@@ -2,5 +2,6 @@ export const CONTROLLER_CONSTANTS = {
     CITY: 'city',
     SCHOOL: 'school',
     COLLEGE: 'college',
-    WORKPLACE: 'workplace'
+    WORKPLACE: 'workplace',
+    USER: 'user'
 }

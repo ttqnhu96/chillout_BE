@@ -1,4 +1,4 @@
-import { ResponseDto } from "../dtos/response.dto";
+import { ResponseDto } from "../dtos/responses/response.dto";
 import { IBaseService } from "./ibase.service";
 
 export interface IWorkplaceService extends IBaseService {
