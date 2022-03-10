@@ -2,7 +2,7 @@ import { BaseEntityAutoId } from "./base/base.entity";
 import { Column, Entity } from "typeorm";
 
 @Entity({ name: 'school' })
-export class School extends BaseEntityAutoId {
+export class SchoolEntity extends BaseEntityAutoId {
     @Column({name: 'name'})
     name: string;
 

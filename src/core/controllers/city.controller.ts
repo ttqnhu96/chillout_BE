@@ -14,7 +14,7 @@ export class CityController {
     @Get()
     @ApiOperation({ summary: 'Get city list' })
     @ApiResponse({ status: 200, description: 'The result returned is the ResponseDto class', schema: {} })
-    async getListAddress() {
+    async getCityList() {
         this._logger.log('========== Get city list ==========');
         return await this._cityService.getCityList();
     }

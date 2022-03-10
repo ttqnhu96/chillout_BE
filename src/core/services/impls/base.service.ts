@@ -1,6 +1,6 @@
 import { Logger } from "@nestjs/common";
-import { ErrorMap } from "src/core/common/error.map";
-import { ResponseDto } from "src/core/dtos/response.dto";
+import { ErrorMap } from "../../common/error.map";
+import { ResponseDto } from "../../dtos/response.dto";
 import { IBaseService } from "../ibase.service";
 
 export class BaseService implements IBaseService {
