@@ -1,6 +1,6 @@
 import { ConfigService, ENV_CONFIG } from "../../shared/services/config.service";
 import { COMMON_CONSTANTS } from "../common/constants/common.constant";
-import { AuthService } from "../services/impls/auth.service";
+import { UserService } from "../services/impls/user.service";
 const moment = require('moment-timezone');
 
 export class CommonUtil {
@@ -41,7 +41,7 @@ export class CommonUtil {
      * @returns 
      */
     async getUsername(): Promise<string> {
-        const currentUser = await AuthService.getAuthUser();
+        const currentUser = await UserService.getAuthUser();
         if (currentUser) {
             const username = currentUser["username"];
             return username;

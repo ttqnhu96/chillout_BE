@@ -8,13 +8,14 @@ import { IUserRepository } from "../../repositories/iuser.repository";
 import { CreateUserRequest } from "../../dtos/requests/create-user.request";
 import { AutoMapperUtil } from "../../utils/auto-mapper/auto-mapper.util";
 import { MAPPER_CONFIG } from "../../config/mapper.config";
-import { AuthService } from "./auth.service";
-import { USER_STATUS_ENUM, USER_TYPE_ENUM } from "src/core/common/constants/common.constant";
+import { APP_CONSTANTS, USER_STATUS_ENUM, USER_TYPE_ENUM } from "src/core/common/constants/common.constant";
+import { ContextService } from "../../../providers/context.service";
 const bcrypt = require('bcrypt');
 
 @Injectable()
 export class UserService extends BaseService implements IUserService {
     private readonly _logger = new Logger(UserService.name);
+    private static _authUserKey = APP_CONSTANTS.USER_KEY;
     constructor(@Inject(REPOSITORY_INTERFACE.IUSER_REPOSITORY) private _userRepos: IUserRepository) {
         super(_userRepos);
         this._logger.log("============== Constructor UserService ==============");
@@ -76,5 +77,13 @@ export class UserService extends BaseService implements IUserService {
 
     async hashPassword(password: string): Promise<string> {
         return await bcrypt.hash(password, 12);
+    }
+
+    static setAuthUser(user) {
+        ContextService.set(this._authUserKey, user);
+    }
+
+    static getAuthUser() {
+        return ContextService.get(this._authUserKey);
     }
 }
