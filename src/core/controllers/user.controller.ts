@@ -39,8 +39,8 @@ export class UserController {
     @UseGuards(JwtAuthGuard)
     @UseInterceptors(AuthUserInterceptor)
     @ApiBearerAuth()
-    public async getAirdropEventDetail(@Param('username') username: string) {
-        this._logger.log('========== Get airdrop event detail ==========');
+    public async getUserByUsername(@Param('username') username: string) {
+        this._logger.log('========== Get user by username ==========');
         return await this._userService.getUserByUsername(username);
     }
 }
