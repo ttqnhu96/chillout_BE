@@ -16,6 +16,8 @@ import { WorkplaceService } from "./services/impls/workplace.service";
 import { UserService } from "./services/impls/user.service";
 import { UserRepository } from "./repositories/impls/user.repository";
 import { UserController } from "./controllers/user.controller";
+import { JwtModule } from '@nestjs/jwt';
+import { ENV_CONFIG } from "../shared/services/config.service";
 
 const controllers = [
     CityController,
@@ -33,15 +35,19 @@ const entities = [
     ENTITIES_CONFIG.USER
 ]
 
-const providers= [
-    ]
+const providers = [
+]
 
 @Global()
 @Module({
     imports: [TypeOrmModule.forFeature([...entities]),
+        JwtModule.register({
+            secret: ENV_CONFIG.JWT_SECRET_KEY,
+            signOptions: { expiresIn: ENV_CONFIG.EXPIRES_TIME },
+        }),
     ],
     controllers: [...controllers],
-    providers: [  
+    providers: [
         //repository
         {
             provide: REPOSITORY_INTERFACE.ICITY_REPOSITORY,

@@ -1,4 +1,4 @@
-import { CreateUserRequest } from "../dtos/requests/create-user.request";
+import { CreateUserRequest } from "../dtos/requests/user/create-user.request";
 import { CityEntity } from "../entities/city.entity";
 import { CollegeEntity } from "../entities/college.entity";
 import { SchoolEntity } from "../entities/school.entity";

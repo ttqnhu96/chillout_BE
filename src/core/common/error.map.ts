@@ -11,6 +11,22 @@ export const ErrorMap = {
         Code: 'E002',
         Message: `User does not exist.`
     },
+    E003: {
+        Code: 'E003',
+        Message: `This account has not been registered. Please sign up.`
+    },
+    E004: {
+        Code: 'E004',
+        Message: `This account was deactivated.`
+    },
+    E005: {
+        Code: 'E005',
+        Message: `Invalid password.`
+    },
+    E006: {
+        Code: 'E006',
+        Message: `You do not have permission to access other account information.`
+    },
 
     E400: {
         Code: 'E400',

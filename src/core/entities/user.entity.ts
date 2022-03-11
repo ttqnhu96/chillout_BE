@@ -15,12 +15,12 @@ export class UserEntity extends BaseEntityAutoId {
         enum: USER_TYPE_ENUM,
         name: 'user_type'
     })
-    accountType: USER_TYPE_ENUM;
+    userType: USER_TYPE_ENUM;
 
     @Column({
         type: 'enum',
         enum: USER_STATUS_ENUM,
         name: 'user_status'
     })
-    accountStatus: USER_STATUS_ENUM;
+    userStatus: USER_STATUS_ENUM;
 }

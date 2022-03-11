@@ -5,7 +5,7 @@ import { IBaseService } from "../ibase.service";
 
 export class BaseService implements IBaseService {
     private _repos: any;
-    //private _log = new Logger(BaseService.name);
+    private _log = new Logger(BaseService.name);
     public constructor(repos: any) {
         this._repos = repos;
     }

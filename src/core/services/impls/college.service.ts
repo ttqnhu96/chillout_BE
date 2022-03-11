@@ -6,7 +6,7 @@ import { ICityRepository } from "../../repositories/icity.repository";
 import { ResponseDto } from "../../dtos/responses/response.dto";
 import { BaseService } from "./base.service";
 import { ICollegeService } from "../icollege.service";
-import { ICollegeRepository } from "src/core/repositories/icollege.repository";
+import { ICollegeRepository } from "../../repositories/icollege.repository";
 
 @Injectable()
 export class CollegeService extends BaseService implements ICollegeService {

@@ -35,8 +35,8 @@ export class ConfigService {
   get ENV_CONFIG() {
     return {
       TIMEZONE: `${this.get('APP_TIMEZONE')}`,
-      // CRON_EXPRESSION_TRANSACTION_JOB: `${this.get('CRON_EXPRESSION_TRANSACTION_JOB')}`,
-      // CRON_EXPRESSION_GMO_JOB: `${this.get('CRON_EXPRESSION_GMO_JOB')}`,
+      JWT_SECRET_KEY: `${this.get('JWT_SECRET_KEY')}`,
+      EXPIRES_TIME: `${this.get('EXPIRES_TIME')}`,
       // CRON_EXPRESSION_TRANSFER_ST_FROM_EVENT_TO_OPERATOR_JOB: `${this.get('CRON_EXPRESSION_TRANSFER_ST_FROM_EVENT_TO_OPERATOR_JOB')}`,
       // NATIONAL_PHONE: `${this.get('NATIONAL_PHONE')}`,
       // RIDERECT_LINK: `${this.get('APP_RIDERECT_LINK')}`,

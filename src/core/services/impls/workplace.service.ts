@@ -5,7 +5,7 @@ import { REPOSITORY_INTERFACE } from "../../config/module.config";
 import { ResponseDto } from "../../dtos/responses/response.dto";
 import { BaseService } from "./base.service";
 import { IWorkplaceService } from "../iworkplace.service";
-import { IWorkplaceRepository } from "src/core/repositories/iworkplace.repository";
+import { IWorkplaceRepository } from "../../repositories/iworkplace.repository";
 
 @Injectable()
 export class WorkplaceService extends BaseService implements IWorkplaceService {

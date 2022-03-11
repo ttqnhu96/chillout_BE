@@ -5,3 +5,8 @@ export const CONTROLLER_CONSTANTS = {
     WORKPLACE: 'workplace',
     USER: 'user'
 }
+
+export const URL_CONSTANTS = {
+    LOGIN: 'login',
+    GET_BY_USERNAME: ':username'
+}
