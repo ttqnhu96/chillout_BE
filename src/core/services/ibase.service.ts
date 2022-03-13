@@ -26,4 +26,16 @@ export interface IBaseService {
      * @param data 
      */
     create<T>(data: T | any): Promise<ResponseDto>;
+
+    /**
+     * update
+     * @param data 
+     */
+    update<T>(data: T | any): Promise<ResponseDto>
+
+    /**
+     * remove
+     * @param id 
+     */
+    remove(id: any): Promise<ResponseDto>;
 }

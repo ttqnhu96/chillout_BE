@@ -3,10 +3,15 @@ export const CONTROLLER_CONSTANTS = {
     SCHOOL: 'school',
     COLLEGE: 'college',
     WORKPLACE: 'workplace',
-    USER: 'user'
+    USER: 'user',
+    PROFILE: 'profile'
 }
 
 export const URL_CONSTANTS = {
     LOGIN: 'login',
-    GET_BY_USERNAME: ':username'
+    GET_BY_USERNAME: ':username',
+    GET_BY_ID: ':id',
+    GET_DETAIL: 'detail/:id',
+    UPDATE: ':id',
+    UPDATE_LANGUAGE: 'settings/language',
 }

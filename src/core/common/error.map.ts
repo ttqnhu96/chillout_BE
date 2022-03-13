@@ -27,6 +27,14 @@ export const ErrorMap = {
         Code: 'E006',
         Message: `You do not have permission to access other account information.`
     },
+    E007: {
+        Code: 'E007',
+        Message: `Profile does not exist.`
+    },
+    E008: {
+        Code: 'E008',
+        Message: `You do not have permission to update other account information.`
+    },
 
     E400: {
         Code: 'E400',

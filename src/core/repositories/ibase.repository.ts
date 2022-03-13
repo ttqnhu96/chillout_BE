@@ -1,3 +1,5 @@
+import { DeleteResult } from "typeorm";
+
 export interface IBaseRepository {
 
     /**
@@ -24,4 +26,16 @@ export interface IBaseRepository {
      * @param data 
      */
     create(data: any | any): Promise<any>;
+
+    /**
+     * update
+     * @param data 
+     */
+    update(data: any | any): Promise<any>
+
+    /**
+     * remove
+     * @param id 
+     */
+    remove(id: any): Promise<DeleteResult>;
 }

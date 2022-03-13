@@ -2,7 +2,7 @@ import { BaseEntityAutoId } from "./base/base.entity";
 import { Column, Entity } from "typeorm";
 
 @Entity({ name: 'profile' })
-export class Profile extends BaseEntityAutoId {
+export class ProfileEntity extends BaseEntityAutoId {
     @Column({ name: 'full_name' })
     fullName: string;
 
@@ -18,14 +18,14 @@ export class Profile extends BaseEntityAutoId {
     @Column({ name: 'email' })
     email: string;
 
-    @Column({ name: 'about' })
-    about: string;
+    @Column({ name: 'bio' })
+    bio: string;
 
     @Column({ name: 'avatar' })
     avatar: string;
 
-    @Column({ name: 'address_id' })
-    addressId: number;
+    @Column({ name: 'city_id' })
+    cityId: number;
 
     @Column({ name: 'school_id' })
     schoolId: number;
@@ -36,12 +36,6 @@ export class Profile extends BaseEntityAutoId {
     @Column({ name: 'workplace_id' })
     workplaceId: number;
 
-    @Column({ name: 'user_id' })
-    userId: number;
-
     @Column({ name: 'relationship_id' })
     relationshipId: number;
-
-    @Column({name: 'language'})
-    language: string;
 }

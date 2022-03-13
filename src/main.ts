@@ -1,4 +1,5 @@
 //import { ConfigService } from '@nestjs/config';
+import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ConfigService } from './shared/services/config.service';
@@ -16,8 +17,19 @@ async function bootstrap() {
   // set API prefix
   app.setGlobalPrefix(configService.get('API_PREFIX'));
 
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      transform: true,
+      dismissDefaultMessages: true,
+      validationError: {
+        target: false,
+      },
+    }),
+  );
+
   setupSwagger(app);
-  
+
   //const configService = app.get(ConfigService);
   //const port = configService.get('app.port');
 

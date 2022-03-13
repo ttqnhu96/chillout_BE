@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Inject, Logger, Param, Post, UseGuards, UseInterceptors} from "@nestjs/common";
+import { Body, Controller, Get, HttpCode, HttpStatus, Inject, Logger, Param, Post, Put, UseGuards, UseInterceptors} from "@nestjs/common";
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { CONTROLLER_CONSTANTS, URL_CONSTANTS } from "../common/constants/api.constant";
 import { SERVICE_INTERFACE } from "../config/module.config";
@@ -7,6 +7,7 @@ import { LoginRequest } from "../dtos/requests/user/login.request";
 import { JwtAuthGuard } from "../../guards/jwt-auth.guard";
 import { IUserService } from "../services/iuser.service";
 import { AuthUserInterceptor } from "../../interceptors/auth-user-interceptor.service";
+import { UpdateUserLanguageRequest } from "../dtos/requests/user/update-user-language.request";
 
 @Controller(CONTROLLER_CONSTANTS.USER)
 @ApiTags(CONTROLLER_CONSTANTS.USER)
@@ -42,5 +43,16 @@ export class UserController {
     public async getUserByUsername(@Param('username') username: string) {
         this._logger.log('========== Get user by username ==========');
         return await this._userService.getUserByUsername(username);
+    }
+
+    @Put(URL_CONSTANTS.UPDATE_LANGUAGE)
+    @ApiOperation({ summary: 'Update user language' })
+    @ApiResponse({ status: 200, description: 'The result returned is the ResponseDto class', schema: {} })
+    @UseGuards(JwtAuthGuard)
+    @UseInterceptors(AuthUserInterceptor)
+    @ApiBearerAuth()
+    public async updateUserLanguage(@Body() request: UpdateUserLanguageRequest) {
+        this._logger.log('========== Update user language ==========');
+        return await this._userService.updateUserLanguage(request);
     }
 }

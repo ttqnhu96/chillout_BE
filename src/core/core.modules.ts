@@ -16,15 +16,19 @@ import { WorkplaceService } from "./services/impls/workplace.service";
 import { UserService } from "./services/impls/user.service";
 import { UserRepository } from "./repositories/impls/user.repository";
 import { UserController } from "./controllers/user.controller";
+import { ProfileController } from "./controllers/profile.controller";
 import { JwtModule } from '@nestjs/jwt';
 import { ENV_CONFIG } from "../shared/services/config.service";
+import { ProfileRepository } from "./repositories/impls/profile.repository";
+import { ProfileService } from "./services/impls/profile.service";
 
 const controllers = [
     CityController,
     SchoolController,
     CollegeController,
     WorkplaceController,
-    UserController
+    UserController,
+    ProfileController
 ];
 
 const entities = [
@@ -32,7 +36,8 @@ const entities = [
     ENTITIES_CONFIG.SCHOOL,
     ENTITIES_CONFIG.COLLEGE,
     ENTITIES_CONFIG.WORKPLACE,
-    ENTITIES_CONFIG.USER
+    ENTITIES_CONFIG.USER,
+    ENTITIES_CONFIG.PROFILE
 ]
 
 const providers = [
@@ -69,6 +74,10 @@ const providers = [
             provide: REPOSITORY_INTERFACE.IUSER_REPOSITORY,
             useClass: UserRepository
         },
+        {
+            provide: REPOSITORY_INTERFACE.IPROFILE_REPOSITORY,
+            useClass: ProfileRepository
+        },
 
         //service
         {
@@ -90,6 +99,10 @@ const providers = [
         {
             provide: SERVICE_INTERFACE.IUSER_SERVICE,
             useClass: UserService
+        },
+        {
+            provide: SERVICE_INTERFACE.IPROFILE_SERVICE,
+            useClass: ProfileService
         },
         //Provider
 

@@ -1,6 +1,6 @@
 import { BaseEntityAutoId } from "./base/base.entity";
 import { Column, Entity } from "typeorm";
-import { USER_STATUS_ENUM, USER_TYPE_ENUM } from "../common/constants/common.constant";
+import { LANGUAGE_ENUM, USER_STATUS_ENUM, USER_TYPE_ENUM } from "../common/constants/common.constant";
 
 @Entity({ name: 'user' })
 export class UserEntity extends BaseEntityAutoId {
@@ -23,4 +23,14 @@ export class UserEntity extends BaseEntityAutoId {
         name: 'user_status'
     })
     userStatus: USER_STATUS_ENUM;
+
+    @Column({
+        type: 'enum',
+        enum: LANGUAGE_ENUM,
+        name: 'language'
+    })
+    language: LANGUAGE_ENUM;
+
+    @Column({ name: 'profile_id' })
+    profileId: number;
 }
