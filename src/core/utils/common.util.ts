@@ -23,7 +23,7 @@ export class CommonUtil {
      * currentDate
      * @param 
      */
-     public currentDate(): Date {
+    public currentDate(): Date {
         let timezone = ENV_CONFIG.TIMEZONE;
         if (ENV_CONFIG.TIMEZONE === "undefined") {
             timezone = COMMON_CONSTANTS.TIMEZONE;
@@ -32,7 +32,7 @@ export class CommonUtil {
         const date = new Date();
         const momentDate = moment().tz(timezone);
         const utcOffset = momentDate.utcOffset();
-        const newDate = new Date(date.getTime() + (utcOffset) * 60 * 1000);    
+        const newDate = new Date(date.getTime() + (utcOffset) * 60 * 1000);
         return newDate;
     }
 
@@ -45,6 +45,20 @@ export class CommonUtil {
         if (currentUser) {
             const username = currentUser["username"];
             return username;
+        } else {
+            return "";
+        }
+    }
+
+    /**
+     * getUserId
+     * @returns 
+     */
+    async getUserId(): Promise<string> {
+        const currentUser = await UserService.getAuthUser();
+        if (currentUser) {
+            const userId = currentUser["id"];
+            return userId;
         } else {
             return "";
         }

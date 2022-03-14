@@ -35,6 +35,14 @@ export const ErrorMap = {
         Code: 'E008',
         Message: `You do not have permission to update other account information.`
     },
+    E009: {
+        Code: 'E009',
+        Message: `Post does not exist.`
+    },
+    E010: {
+        Code: 'E010',
+        Message: `You do not have permission to update other account's post.`
+    },
 
     E400: {
         Code: 'E400',

@@ -1,8 +1,12 @@
+import { CreatePostRequest } from "../dtos/requests/post/create-post.request";
+import { UpdatePostRequest } from "../dtos/requests/post/update-post.request";
 import { UpdateProfileRequest } from "../dtos/requests/profile/update-profile.request";
 import { CreateUserRequest } from "../dtos/requests/user/create-user.request";
 import { UpdateUserLanguageRequest } from "../dtos/requests/user/update-user-language.request";
 import { CityEntity } from "../entities/city.entity";
 import { CollegeEntity } from "../entities/college.entity";
+import { PhotoEntity } from "../entities/photo.entity";
+import { PostEntity } from "../entities/post.entity";
 import { ProfileEntity } from "../entities/profile.entity";
 import { SchoolEntity } from "../entities/school.entity";
 import { UserEntity } from "../entities/user.entity";
@@ -14,7 +18,9 @@ export const ENTITIES_CONFIG = {
     COLLEGE: CollegeEntity,
     WORKPLACE: WorkplaceEntity,
     USER: UserEntity,
-    PROFILE: ProfileEntity
+    PROFILE: ProfileEntity,
+    POST: PostEntity,
+    PHOTO: PhotoEntity
 }
 
 export const SERVICE_INTERFACE = {
@@ -24,6 +30,8 @@ export const SERVICE_INTERFACE = {
     IWORKPLACE_SERVICE: 'IWorkplaceService',
     IUSER_SERVICE: 'IUserService',
     IPROFILE_SERVICE: 'IProfilerService',
+    IPOST_SERVICE: 'IPostService',
+    IPHOTO_SERVICE: 'IPhotoaService'
 }
 
 export const REPOSITORY_INTERFACE = {
@@ -33,16 +41,22 @@ export const REPOSITORY_INTERFACE = {
     IWORKPLACE_REPOSITORY: 'IWorkplaceRepository',
     IUSER_REPOSITORY: 'IUserRepository',
     IPROFILE_REPOSITORY: 'IProfileRepository',
+    IPOST_REPOSITORY: 'IPostRepository',
+    IPHOTO_REPOSITORY: 'IPhotoRepository'
 }
 
 export const REQUEST_CONFIG = {
     CREATE_USER_REQUEST: CreateUserRequest,
     UPDATE_PROFILE_REQUEST: UpdateProfileRequest,
-    UPDATE_USER_LANGUAGE_REQUEST: UpdateUserLanguageRequest
+    UPDATE_USER_LANGUAGE_REQUEST: UpdateUserLanguageRequest,
+    CREATE_POST_REQUEST: CreatePostRequest,
+    UPDATE_POST_REQUEST: UpdatePostRequest
 }
 
 export module MODULE_REQUEST {
     export abstract class CreateUserAbstractRequest extends REQUEST_CONFIG.CREATE_USER_REQUEST{}
     export abstract class UpdateProfileAbstractRequest extends REQUEST_CONFIG.UPDATE_PROFILE_REQUEST{}
     export abstract class UpdateUserLanguageAbstractRequest extends REQUEST_CONFIG.UPDATE_USER_LANGUAGE_REQUEST{}
+    export abstract class CreatePostAbstractRequest extends REQUEST_CONFIG.CREATE_POST_REQUEST{}
+    export abstract class UpdatePostAbstractRequest extends REQUEST_CONFIG.UPDATE_POST_REQUEST{}
 }

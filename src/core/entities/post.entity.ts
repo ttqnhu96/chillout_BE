@@ -3,7 +3,7 @@ import { Column, Entity } from "typeorm";
 import { PRIVACY_SETTING } from "../common/constants/common.constant";
 
 @Entity({ name: 'post' })
-export class Post extends BaseEntityAutoId {
+export class PostEntity extends BaseEntityAutoId {
     @Column({ name: 'content', length: 10000 })
     content: string;
 
@@ -12,7 +12,7 @@ export class Post extends BaseEntityAutoId {
         enum: PRIVACY_SETTING,
         name: 'privacy_setting_id'
     })
-    accountType: PRIVACY_SETTING;
+    privacySettingId: PRIVACY_SETTING;
 
     @Column({ name: 'likes' })
     likes: number;

@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsEmail, IsEnum, IsInt, IsNotEmpty, IsString, Matches, MaxLength } from "class-validator";
+import { IsEmail, IsEnum, IsInt, IsNotEmpty, IsString, Matches, MaxLength, Min } from "class-validator";
 import { COMMON_CONSTANTS, GENDER_ENUM } from "../../../common/constants/common.constant";
 
 export class UpdateProfileRequest {
@@ -31,7 +31,6 @@ export class UpdateProfileRequest {
     bio: string;
 
     @ApiProperty()
-    @IsInt()
     cityId: number;
 
     @ApiProperty()

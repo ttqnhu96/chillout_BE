@@ -83,8 +83,8 @@ export class ProfileService extends BaseService implements IProfileService {
             }
 
             // Check access permission
-            const currentUsername = await this._commonUtil.getUsername();
-            const currentUser = await this._userRepos.findOne({ username: currentUsername });
+            const currentUserId = await this._commonUtil.getUserId();
+            const currentUser = await this._userRepos.findOne(currentUserId);
             if (currentUser.profileId !== id) {
                 return res.return(ErrorMap.E008.Code);
             }

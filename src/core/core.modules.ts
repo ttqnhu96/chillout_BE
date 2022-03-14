@@ -21,6 +21,11 @@ import { JwtModule } from '@nestjs/jwt';
 import { ENV_CONFIG } from "../shared/services/config.service";
 import { ProfileRepository } from "./repositories/impls/profile.repository";
 import { ProfileService } from "./services/impls/profile.service";
+import { PostRepository } from "./repositories/impls/post.repository";
+import { PostService } from "./services/impls/post.service";
+import { PostController } from "./controllers/post.controller";
+import { PhotoRepository } from "./repositories/impls/photo.repository";
+import { PhotoService } from "./services/impls/photo.service";
 
 const controllers = [
     CityController,
@@ -28,7 +33,8 @@ const controllers = [
     CollegeController,
     WorkplaceController,
     UserController,
-    ProfileController
+    ProfileController,
+    PostController
 ];
 
 const entities = [
@@ -37,7 +43,9 @@ const entities = [
     ENTITIES_CONFIG.COLLEGE,
     ENTITIES_CONFIG.WORKPLACE,
     ENTITIES_CONFIG.USER,
-    ENTITIES_CONFIG.PROFILE
+    ENTITIES_CONFIG.PROFILE,
+    ENTITIES_CONFIG.POST,
+    ENTITIES_CONFIG.PHOTO
 ]
 
 const providers = [
@@ -78,6 +86,14 @@ const providers = [
             provide: REPOSITORY_INTERFACE.IPROFILE_REPOSITORY,
             useClass: ProfileRepository
         },
+        {
+            provide: REPOSITORY_INTERFACE.IPOST_REPOSITORY,
+            useClass: PostRepository
+        },
+        {
+            provide: REPOSITORY_INTERFACE.IPHOTO_REPOSITORY,
+            useClass: PhotoRepository
+        },
 
         //service
         {
@@ -103,6 +119,14 @@ const providers = [
         {
             provide: SERVICE_INTERFACE.IPROFILE_SERVICE,
             useClass: ProfileService
+        },
+        {
+            provide: SERVICE_INTERFACE.IPOST_SERVICE,
+            useClass: PostService
+        },
+        {
+            provide: SERVICE_INTERFACE.IPHOTO_SERVICE,
+            useClass: PhotoService
         },
         //Provider
 

@@ -4,7 +4,8 @@ export const CONTROLLER_CONSTANTS = {
     COLLEGE: 'college',
     WORKPLACE: 'workplace',
     USER: 'user',
-    PROFILE: 'profile'
+    PROFILE: 'profile',
+    POST: 'post'
 }
 
 export const URL_CONSTANTS = {
@@ -14,4 +15,5 @@ export const URL_CONSTANTS = {
     GET_DETAIL: 'detail/:id',
     UPDATE: ':id',
     UPDATE_LANGUAGE: 'settings/language',
+    UPDATE_LIKES: 'update/likes'
 }

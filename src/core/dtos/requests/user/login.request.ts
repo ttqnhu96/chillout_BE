@@ -4,9 +4,9 @@ import { IsNotEmpty } from "class-validator";
 export class LoginRequest {
   @IsNotEmpty({message: 'Username is required'})
   @ApiProperty()
-  username: string='';
+  username: string;
 
   @IsNotEmpty({message: 'Password is required'}) 
   @ApiProperty()
-  password: string='';
+  password: string;
 }
