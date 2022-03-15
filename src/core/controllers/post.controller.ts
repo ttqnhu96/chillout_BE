@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Inject, Logger, Param, Post, Put, UseGuards, UseInterceptors} from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Inject, Logger, Param, Post, Put, UseGuards, UseInterceptors} from "@nestjs/common";
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { CONTROLLER_CONSTANTS, URL_CONSTANTS } from "../common/constants/api.constant";
 import { SERVICE_INTERFACE } from "../config/module.config";
@@ -8,6 +8,8 @@ import { IPostService } from "../services/ipost.service";
 import { CreatePostRequest } from "../dtos/requests/post/create-post.request";
 import { UpdatePostRequest } from "../dtos/requests/post/update-post.request";
 import { UpdateLikesRequest } from "../dtos/requests/post/like-post.request";
+import { GetPostListNewsFeedRequest } from "../dtos/requests/post/get-post-list-news-feed.request";
+import { GetPostListWallRequest } from "../dtos/requests/post/get-post-list-wall.request";
 
 @Controller(CONTROLLER_CONSTANTS.POST)
 @ApiTags(CONTROLLER_CONSTANTS.POST)
@@ -47,5 +49,60 @@ export class PostController {
     public async updateLikes(@Body() request: UpdateLikesRequest) {
         this._logger.log('========== Update likes ==========');
         return await this._postService.updateLikes(request);
+    }
+
+    @Get(URL_CONSTANTS.GET_BY_ID)
+    @ApiOperation({ summary: 'Get post by id' })
+    @ApiResponse({ status: 200, description: 'The result returned is the ResponseDto class', schema: {} })
+    @UseGuards(JwtAuthGuard)
+    @UseInterceptors(AuthUserInterceptor)
+    @ApiBearerAuth()
+    public async getPostById(@Param('id') id: number) {
+        this._logger.log('========== Get post by id ==========');
+        return await this._postService.getPostById(id);
+    }
+    
+    @Get(URL_CONSTANTS.GET_DETAIL)
+    @ApiOperation({ summary: 'Get post detail by id' })
+    @ApiResponse({ status: 200, description: 'The result returned is the ResponseDto class', schema: {} })
+    @UseGuards(JwtAuthGuard)
+    @UseInterceptors(AuthUserInterceptor)
+    @ApiBearerAuth()
+    public async getPostDetailById(@Param('id') id: number) {
+        this._logger.log('========== Get post detail by id ==========');
+        return await this._postService.getPostDetailById(id);
+    }
+
+    @Delete(URL_CONSTANTS.DELETE)
+    @ApiOperation({ summary: 'Delete post' })
+    @ApiResponse({ status: 200, description: 'The result returned is the ResponseDto class', schema: {} })
+    @UseGuards(JwtAuthGuard)
+    @UseInterceptors(AuthUserInterceptor)
+    @ApiBearerAuth()
+    public async deletePostById(@Param('id') id: number) {
+        this._logger.log('========== Delete post ==========');
+        return await this._postService.deletePostById(id);
+    }
+
+    @Post(URL_CONSTANTS.GET_POST_LIST_NEWS_FEED)
+    @ApiOperation({ summary: 'Get post list in news feed' })
+    @ApiResponse({ status: 200, description: 'The result returned is the ResponseDto class', schema: {} })
+    @UseGuards(JwtAuthGuard)
+    @UseInterceptors(AuthUserInterceptor)
+    @ApiBearerAuth()
+    public async getPostListInNewsFeed(@Body() request: GetPostListNewsFeedRequest) {
+        this._logger.log('========== Get post list in news feed ==========');
+        return await this._postService.getPostListNewsFeed(request);
+    }
+
+    @Post(URL_CONSTANTS.GET_POST_LIST_WALL)
+    @ApiOperation({ summary: 'Get post list in wall' })
+    @ApiResponse({ status: 200, description: 'The result returned is the ResponseDto class', schema: {} })
+    @UseGuards(JwtAuthGuard)
+    @UseInterceptors(AuthUserInterceptor)
+    @ApiBearerAuth()
+    public async getPostListWall(@Body() request: GetPostListWallRequest) {
+        this._logger.log('========== Get post list in wall ==========');
+        return await this._postService.getPostListWall(request);
     }
 }

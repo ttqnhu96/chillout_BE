@@ -4,6 +4,8 @@ import { ENTITIES_CONFIG } from "../../config/module.config";
 import { BaseRepository } from "./base.repository";
 import { ObjectLiteral, Repository } from "typeorm";
 import { IPostRepository } from "../ipost.repository";
+import { GetPostListNewsFeedRequest } from "../../dtos/requests/post/get-post-list-news-feed.request";
+import { GetPostListWallRequest } from "../../dtos/requests/post/get-post-list-wall.request";
 
 @Injectable()
 export class PostRepository extends BaseRepository implements IPostRepository {
@@ -13,21 +15,45 @@ export class PostRepository extends BaseRepository implements IPostRepository {
         this._logger.log("============== Constructor PostRepository ==============");
     }
 
-    // /**
-    //  * getProfileDetailById
-    //  * @param id
-    //  */
-    // async getProfileDetailById(id: number) {
-    //     const sql = `SELECT p.full_name AS fullName, p.gender AS gender, p.birthday AS birthday,
-    //         SUBSTR(p.phone, 
-    //         -(CHAR_LENGTH(p.phone)-(SELECT CHAR_LENGTH('${this._nationalPhone}'))), 
-    //         CHAR_LENGTH(p.phone)-(SELECT CHAR_LENGTH('${this._nationalPhone}'))) AS phone, p.email AS email, p.bio AS bio,
-    //         p.city_id AS cityId, (SELECT name FROM city WHERE Id = p.city_id) AS cityName,
-    //         p.school_id AS schoolId, (SELECT name FROM school WHERE Id = p.school_id) AS schoolName,
-    //         p.college_id AS collegeId, (SELECT name FROM college WHERE Id = p.college_id) AS collegeName,
-    //         p.workplace_id AS workplaceId, (SELECT name FROM workplace WHERE Id = p.workplace_id) AS workplaceName
-    //     FROM Profile p
-    //     WHERE p.Id = ?`;
-    //     return await this.repos.query(sql, [id]);
-    // }
+    /**
+     * getPostListNewsFeed
+     * @param request
+     */
+    async getPostListNewsFeed(request: GetPostListNewsFeedRequest) {
+        let params = [];
+        const sql = `SELECT p.id AS id, p.content AS content, p.privacy_setting_id AS privacySettingId, p.likes AS likes, 
+        p.user_id AS userId, p.created_at AS createdAt, p.updated_at AS updatedAt
+        FROM Post p
+            INNER JOIN User u ON u.id = p.user_id
+            INNER JOIN Profile pro ON pro.id = u.profile_id
+            LEFT JOIN Relationship r ON r.id = pro.relationship_id
+        WHERE ( p.user_id = ? 
+            OR ( p.user_id = r.user_id_2 AND r.user_id_1 = ? ) )
+            AND p.is_deleted = FALSE
+        ORDER BY p.created_at DESC
+        LIMIT ? OFFSET ?`;
+        params.push(request.userId);
+        params.push(request.userId);
+        params.push(request.pageSize);
+        params.push(request.pageIndex * request.pageSize);
+        return await this.repos.query(sql, params);
+    }
+
+    /**
+     * getPostListWall
+     * @param request
+     */
+    async getPostListWall(request: GetPostListWallRequest) {
+        let params = [];
+        const sql = `SELECT p.id AS id, p.content AS content, p.privacy_setting_id AS privacySettingId, p.likes AS likes, 
+        p.user_id AS userId, p.created_at AS createdAt, p.updated_at AS updatedAt
+        FROM Post p
+        WHERE p.user_id = ? AND p.is_deleted = FALSE
+        ORDER BY p.created_at DESC
+        LIMIT ? OFFSET ?`;
+        params.push(request.userId);
+        params.push(request.pageSize);
+        params.push(request.pageIndex * request.pageSize);
+        return await this.repos.query(sql, params);
+    }
 }

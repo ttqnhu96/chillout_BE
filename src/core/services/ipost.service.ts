@@ -1,4 +1,6 @@
 import { CreatePostRequest } from "../dtos/requests/post/create-post.request";
+import { GetPostListNewsFeedRequest } from "../dtos/requests/post/get-post-list-news-feed.request";
+import { GetPostListWallRequest } from "../dtos/requests/post/get-post-list-wall.request";
 import { UpdateLikesRequest } from "../dtos/requests/post/like-post.request";
 import { UpdatePostRequest } from "../dtos/requests/post/update-post.request";
 import { ResponseDto } from "../dtos/responses/response.dto";
@@ -23,4 +25,34 @@ export interface IPostService extends IBaseService {
      * @param request
      */
     updateLikes(request: UpdateLikesRequest): Promise<ResponseDto>;
+
+    /**
+     * getPostById
+     * @param id
+     */
+    getPostById(id: number): Promise<ResponseDto>;
+
+    /**
+     * getPostDetailById
+     * @param id
+     */
+    getPostDetailById(id: number): Promise<ResponseDto>;
+
+    /**
+     * deletePostById
+     * @param id
+     */
+    deletePostById(id: number): Promise<ResponseDto>;
+
+    /**
+     * getPostListNewsFeed
+     * @param request
+     */
+    getPostListNewsFeed(request: GetPostListNewsFeedRequest): Promise<ResponseDto>;
+
+    /**
+     * getPostListWall
+     * @param request
+     */
+    getPostListWall(request: GetPostListWallRequest): Promise<ResponseDto>
 }

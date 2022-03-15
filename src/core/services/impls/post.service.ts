@@ -13,6 +13,9 @@ import { PhotoEntity } from "../../entities/photo.entity";
 import { IPhotoRepository } from "../../repositories/iphoto.repository";
 import { UpdatePostRequest } from "../../dtos/requests/post/update-post.request";
 import { UpdateLikesRequest } from "../../dtos/requests/post/like-post.request";
+import { ORDER_BY, PRIVACY_SETTING } from "../../common/constants/common.constant";
+import { GetPostListNewsFeedRequest } from "../../dtos/requests/post/get-post-list-news-feed.request";
+import { GetPostListWallRequest } from "../../dtos/requests/post/get-post-list-wall.request";
 
 @Injectable()
 export class PostService extends BaseService implements IPostService {
@@ -69,7 +72,10 @@ export class PostService extends BaseService implements IPostService {
         const res = new ResponseDto();
         try {
             // Check post existence
-            const checkedPost = await this._postRepos.findOne(id);
+            const checkedPost = await this._postRepos.findOne({
+                id: id,
+                isDeleted: false
+            });
             if (!checkedPost) {
                 return res.return(ErrorMap.E009.Code);
             }
@@ -128,14 +134,182 @@ export class PostService extends BaseService implements IPostService {
         const res = new ResponseDto();
         try {
             // Check post existence
-            const post = await this._postRepos.findOne(request.postId);
+            const post = await this._postRepos.findOne({
+                id: request.postId,
+                isDeleted: false
+            });
             if (!post) {
                 return res.return(ErrorMap.E009.Code);
             }
             //Update likes
             post.likes = request.isLike ? (post.likes + 1) : (post.likes - 1);
-            await this._postRepos.create(post);
+            await this._postRepos.update(post);
             return res.return(ErrorMap.SUCCESSFUL.Code, post);
+        } catch (error) {
+            this._logger.error(`${ErrorMap.E500.Code}: ${ErrorMap.E500.Message}`);
+            this._logger.error(`${error.name}: ${error.message}`);
+            this._logger.error(`${error.stack}`);
+            return res.return(ErrorMap.E500.Code);
+        }
+    }
+
+    /**
+     * getPostById
+     * @param id
+     */
+    async getPostById(id: number): Promise<ResponseDto> {
+        this._logger.log("============== Get post by id ==============");
+        const res = new ResponseDto();
+        try {
+            const post = await this._postRepos.findOne({
+                id: id,
+                isDeleted: false
+            });
+            if (!post) {
+                return res.return(ErrorMap.E009.Code);
+            }
+
+            const currentUserId = await this._commonUtil.getUserId();
+            const cannotAccessPostOnlyMe = post.privacySettingId === PRIVACY_SETTING.ONLY_ME && currentUserId !== post.userId;
+            if (cannotAccessPostOnlyMe) {
+                return res.return(ErrorMap.E009.Code);
+            }
+
+            return res.return(ErrorMap.SUCCESSFUL.Code, post);
+        } catch (error) {
+            this._logger.error(`${ErrorMap.E500.Code}: ${ErrorMap.E500.Message}`);
+            this._logger.error(`${error.name}: ${error.message}`);
+            this._logger.error(`${error.stack}`);
+            return res.return(ErrorMap.E500.Code);
+        }
+    }
+
+    /**
+     * getPostDetailById
+     * @param id
+     */
+    async getPostDetailById(id: number): Promise<ResponseDto> {
+        this._logger.log("============== Get post detail by id ==============");
+        const res = new ResponseDto();
+        try {
+            //Get post by id
+            const post = await this._postRepos.findOne({
+                id: id,
+                isDeleted: false
+            });
+            if (!post) {
+                return res.return(ErrorMap.E009.Code);
+            }
+
+            const currentUserId = await this._commonUtil.getUserId();
+            const cannotAccessPostOnlyMe = post.privacySettingId === PRIVACY_SETTING.ONLY_ME && currentUserId !== post.userId;
+            if (cannotAccessPostOnlyMe) {
+                return res.return(ErrorMap.E009.Code);
+            }
+
+            //Get photos in post
+            const photoList = await this._photoRepos.findByCondition(
+                { postId: id, isDeleted: false },
+                { createdAt: ORDER_BY.DESC });
+
+            post['photoList'] = photoList;
+            return res.return(ErrorMap.SUCCESSFUL.Code, post);
+        } catch (error) {
+            this._logger.error(`${ErrorMap.E500.Code}: ${ErrorMap.E500.Message}`);
+            this._logger.error(`${error.name}: ${error.message}`);
+            this._logger.error(`${error.stack}`);
+            return res.return(ErrorMap.E500.Code);
+        }
+    }
+
+    /**
+     * deletePostById
+     * @param id
+     */
+    async deletePostById(id: number): Promise<ResponseDto> {
+        this._logger.log("============== Delete post by id ==============");
+        const res = new ResponseDto();
+        try {
+            //Check post existence
+            const post = await this._postRepos.findOne({
+                id: id,
+                isDeleted: false
+            });
+            if (!post) {
+                return res.return(ErrorMap.E009.Code);
+            }
+
+            // Check update permission
+            const currentUserId = await this._commonUtil.getUserId();
+            if (currentUserId !== post.userId) {
+                return res.return(ErrorMap.E010.Code);
+            }
+
+            //Delete post
+            post.isDeleted = true;
+            await this._postRepos.update(post);
+
+            //Get photos in post
+            const photoList = await this._photoRepos.findByCondition(
+                { postId: id, isDeleted: false },
+                { id: ORDER_BY.ASC });
+            //Delete photos in post
+            photoList.map(async photo => {
+                photo.isDeleted = true;
+                await this._photoRepos.update(photo);
+            })
+
+            return res.return(ErrorMap.SUCCESSFUL.Code, post);
+        } catch (error) {
+            this._logger.error(`${ErrorMap.E500.Code}: ${ErrorMap.E500.Message}`);
+            this._logger.error(`${error.name}: ${error.message}`);
+            this._logger.error(`${error.stack}`);
+            return res.return(ErrorMap.E500.Code);
+        }
+    }
+
+    /**
+     * getPostListNewsFeed
+     * @param request
+     */
+    async getPostListNewsFeed(request: GetPostListNewsFeedRequest): Promise<ResponseDto> {
+        this._logger.log("============== Get post list in news feed ==============");
+        const res = new ResponseDto();
+        try {
+            const postList = await this._postRepos.getPostListNewsFeed(request);
+            for(let i = 0; i < postList.length; i++) {
+                //Get photos in post
+                const photoList = await this._photoRepos.findByCondition(
+                    { postId: postList[i].id, isDeleted: false },
+                    { createdAt: ORDER_BY.DESC });
+                postList[i].photoList = photoList;
+            }
+            return res.return(ErrorMap.SUCCESSFUL.Code, postList);
+        } catch (error) {
+            this._logger.error(`${ErrorMap.E500.Code}: ${ErrorMap.E500.Message}`);
+            this._logger.error(`${error.name}: ${error.message}`);
+            this._logger.error(`${error.stack}`);
+            return res.return(ErrorMap.E500.Code);
+        }
+    }
+
+    /**
+     * getPostListWall
+     * @param request
+     */
+    async getPostListWall(request: GetPostListWallRequest): Promise<ResponseDto> {
+        this._logger.log("============== Get post list in wall ==============");
+        const res = new ResponseDto();
+        try {
+            const postList = await this._postRepos.getPostListWall(request);
+            for(let i = 0; i < postList.length; i++) {
+                //Get photos in post
+                const photoList = await this._photoRepos.findByCondition(
+                    { postId: postList[i].id, isDeleted: false },
+                    { createdAt: ORDER_BY.DESC });
+                postList[i].photoList = photoList;
+            }
+            return res.return(ErrorMap.SUCCESSFUL.Code, postList);
         } catch (error) {
             this._logger.error(`${ErrorMap.E500.Code}: ${ErrorMap.E500.Message}`);
             this._logger.error(`${error.name}: ${error.message}`);
