@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsNotEmpty } from "class-validator";
 
-export class GetPostListNewsFeedRequest {
+export class GetPhotoListByUserIdRequest {
     @IsNotEmpty({message: 'User id is required'})
     @ApiProperty()
     userId: number;

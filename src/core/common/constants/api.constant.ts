@@ -5,7 +5,8 @@ export const CONTROLLER_CONSTANTS = {
     WORKPLACE: 'workplace',
     USER: 'user',
     PROFILE: 'profile',
-    POST: 'post'
+    POST: 'post',
+    PHOTO: 'photo'
 }
 
 export const URL_CONSTANTS = {
@@ -17,6 +18,7 @@ export const URL_CONSTANTS = {
     UPDATE: ':id',
     UPDATE_LANGUAGE: 'update/language',
     UPDATE_LIKES: 'update/likes',
-    GET_POST_LIST_NEWS_FEED: 'list-newsfeed/:userId',
-    GET_POST_LIST_WALL: 'list-wall/:userId'
+    GET_POST_LIST_NEWS_FEED: 'list-newsfeed',
+    GET_POST_LIST_WALL: 'list-wall',
+    GET_PHOTO_LIST_BY_USER_ID: 'list'
 }

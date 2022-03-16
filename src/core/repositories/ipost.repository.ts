@@ -13,5 +13,5 @@ export interface IPostRepository extends IBaseRepository {
      * getPostListWall
      * @param request
      */
-    getPostListWall(request: GetPostListWallRequest)
+    getPostListWall(request: GetPostListWallRequest);
 }

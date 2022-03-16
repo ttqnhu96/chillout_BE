@@ -72,18 +72,14 @@ export class PostService extends BaseService implements IPostService {
         const res = new ResponseDto();
         try {
             // Check post existence
+            const currentUserId = await this._commonUtil.getUserId();
             const checkedPost = await this._postRepos.findOne({
                 id: id,
+                userId: currentUserId,
                 isDeleted: false
             });
             if (!checkedPost) {
                 return res.return(ErrorMap.E009.Code);
-            }
-
-            // Check update permission
-            const currentUserId = await this._commonUtil.getUserId();
-            if (currentUserId !== checkedPost.userId) {
-                return res.return(ErrorMap.E010.Code);
             }
 
             //Save to Post table
@@ -231,18 +227,14 @@ export class PostService extends BaseService implements IPostService {
         const res = new ResponseDto();
         try {
             //Check post existence
+            const currentUserId = await this._commonUtil.getUserId();
             const post = await this._postRepos.findOne({
                 id: id,
+                userId: currentUserId,
                 isDeleted: false
             });
             if (!post) {
                 return res.return(ErrorMap.E009.Code);
-            }
-
-            // Check update permission
-            const currentUserId = await this._commonUtil.getUserId();
-            if (currentUserId !== post.userId) {
-                return res.return(ErrorMap.E010.Code);
             }
 
             //Delete post
@@ -277,7 +269,7 @@ export class PostService extends BaseService implements IPostService {
         const res = new ResponseDto();
         try {
             const postList = await this._postRepos.getPostListNewsFeed(request);
-            for(let i = 0; i < postList.length; i++) {
+            for (let i = 0; i < postList.length; i++) {
                 //Get photos in post
                 const photoList = await this._photoRepos.findByCondition(
                     { postId: postList[i].id, isDeleted: false },
@@ -302,7 +294,7 @@ export class PostService extends BaseService implements IPostService {
         const res = new ResponseDto();
         try {
             const postList = await this._postRepos.getPostListWall(request);
-            for(let i = 0; i < postList.length; i++) {
+            for (let i = 0; i < postList.length; i++) {
                 //Get photos in post
                 const photoList = await this._photoRepos.findByCondition(
                     { postId: postList[i].id, isDeleted: false },

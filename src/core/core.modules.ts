@@ -26,6 +26,7 @@ import { PostService } from "./services/impls/post.service";
 import { PostController } from "./controllers/post.controller";
 import { PhotoRepository } from "./repositories/impls/photo.repository";
 import { PhotoService } from "./services/impls/photo.service";
+import { PhotoController } from "./controllers/photo.controller";
 
 const controllers = [
     CityController,
@@ -34,7 +35,8 @@ const controllers = [
     WorkplaceController,
     UserController,
     ProfileController,
-    PostController
+    PostController,
+    PhotoController
 ];
 
 const entities = [

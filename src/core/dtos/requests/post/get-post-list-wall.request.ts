@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsInt, IsNotEmpty, IsString } from "class-validator";
+import { IsNotEmpty } from "class-validator";
 
 export class GetPostListWallRequest {
     @IsNotEmpty({message: 'User id is required'})

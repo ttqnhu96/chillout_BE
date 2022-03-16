@@ -41,7 +41,7 @@ export const ErrorMap = {
     },
     E010: {
         Code: 'E010',
-        Message: `You do not have permission to update other account's post.`
+        Message: `Photo does not exist.`
     },
 
     E400: {
