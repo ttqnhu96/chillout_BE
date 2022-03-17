@@ -20,7 +20,6 @@ export class UploadFileService implements IUploadFileService {
         const res = new ResponseDto;
         try {
             const result = await this._uploadFileUtil.upload(folderName, file.buffer, file.originalname);
-            console.log(result)
             return res.return(ErrorMap.SUCCESSFUL.Code, result);
         } catch (error) {
             this._logger.error(`${ErrorMap.E500.Code}: ${ErrorMap.E500.Message}`);
