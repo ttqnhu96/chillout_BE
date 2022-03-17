@@ -16,13 +16,15 @@ import { UpdateLikesRequest } from "../../dtos/requests/post/like-post.request";
 import { ORDER_BY, PRIVACY_SETTING } from "../../common/constants/common.constant";
 import { GetPostListNewsFeedRequest } from "../../dtos/requests/post/get-post-list-news-feed.request";
 import { GetPostListWallRequest } from "../../dtos/requests/post/get-post-list-wall.request";
+import { ICommentRepository } from "../../repositories/icomment.repository";
 
 @Injectable()
 export class PostService extends BaseService implements IPostService {
     private readonly _logger = new Logger(PostService.name);
     private _commonUtil: CommonUtil = new CommonUtil();
     constructor(@Inject(REPOSITORY_INTERFACE.IPOST_REPOSITORY) private _postRepos: IPostRepository,
-        @Inject(REPOSITORY_INTERFACE.IPHOTO_REPOSITORY) private _photoRepos: IPhotoRepository) {
+        @Inject(REPOSITORY_INTERFACE.IPHOTO_REPOSITORY) private _photoRepos: IPhotoRepository,
+        @Inject(REPOSITORY_INTERFACE.ICOMMENT_REPOSITORY) private _commentRepos: ICommentRepository) {
         super(_postRepos);
         this._logger.log("============== Constructor PostService ==============");
     }
@@ -249,6 +251,16 @@ export class PostService extends BaseService implements IPostService {
             photoList.map(async photo => {
                 photo.isDeleted = true;
                 await this._photoRepos.update(photo);
+            })
+
+            //Get comments in post
+            const commentList = await this._commentRepos.findByCondition(
+                { postId: id, isDeleted: false },
+                { id: ORDER_BY.ASC });
+            //Delete comments in post
+            commentList.map(async comment => {
+                comment.isDeleted = true;
+                await this._commentRepos.update(comment);
             })
 
             return res.return(ErrorMap.SUCCESSFUL.Code, post);

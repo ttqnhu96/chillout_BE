@@ -10,6 +10,10 @@ export const COMMON_CONSTANTS = {
     START_TIME_STR: '00:00:00',
 }
 
+export const S3_UPLOAD_FOLDER = {
+    UPLOAD: 'upload'
+}
+
 export enum ORDER_BY {
     DESC = 'DESC',
     ASC = 'ASC'

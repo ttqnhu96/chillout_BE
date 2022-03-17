@@ -1,3 +1,4 @@
+import { UpdateAvatarRequest } from "../dtos/requests/profile/update-avatar.request";
 import { UpdateProfileRequest } from "../dtos/requests/profile/update-profile.request";
 import { ResponseDto } from "../dtos/responses/response.dto";
 import { IBaseService } from "./ibase.service";
@@ -27,4 +28,10 @@ export interface IProfileService extends IBaseService {
      * @param request
      */
     updateProfile(id: number, request: UpdateProfileRequest): Promise<ResponseDto>;
+
+    /**
+     * updateAvatar
+     * @param request
+     */
+    updateAvatar(request: UpdateAvatarRequest): Promise<any>;
 }

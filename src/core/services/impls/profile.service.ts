@@ -10,6 +10,7 @@ import { IUserRepository } from "../../repositories/iuser.repository";
 import { AutoMapperUtil } from "../../utils/auto-mapper/auto-mapper.util";
 import { MAPPER_CONFIG } from "../../config/mapper.config";
 import { CommonUtil } from "../../utils/common.util";
+import { UpdateAvatarRequest } from "../../dtos/requests/profile/update-avatar.request";
 
 @Injectable()
 export class ProfileService extends BaseService implements IProfileService {
@@ -93,6 +94,39 @@ export class ProfileService extends BaseService implements IProfileService {
             request.phone = this._commonUtil.createNationalPhone(request.phone);
             const dataMapper = AutoMapperUtil.map(MAPPER_CONFIG.UPDATE_PROFILE_MAPPING, request);
             dataMapper.id = id;
+            const profile = await this._profileRepos.update(dataMapper);
+
+            return res.return(ErrorMap.SUCCESSFUL.Code, profile);
+        } catch (error) {
+            this._logger.error(`${ErrorMap.E500.Code}: ${ErrorMap.E500.Message}`);
+            this._logger.error(`${error.name}: ${error.message}`);
+            this._logger.error(`${error.stack}`);
+            return res.return(ErrorMap.E500.Code);
+        }
+    }
+
+    /**
+     * updateAvatar
+     * @param request
+     */
+    async updateAvatar(request: UpdateAvatarRequest): Promise<any> {
+        this._logger.log("============== Update avatar ==============");
+        const res = new ResponseDto();
+        try {
+            // Check profile existence
+            const checkedProfile = await this._profileRepos.findOne(request.profileId);
+            if (!checkedProfile) {
+                return res.return(ErrorMap.E007.Code);
+            }
+
+            // Check access permission
+            const currentUserId = await this._commonUtil.getUserId();
+            const currentUser = await this._userRepos.findOne(currentUserId);
+            if (currentUser.profileId !== request.profileId) {
+                return res.return(ErrorMap.E008.Code);
+            }
+
+            const dataMapper = AutoMapperUtil.map(MAPPER_CONFIG.UPDATE_AVATAR_MAPPING, request);
             const profile = await this._profileRepos.update(dataMapper);
 
             return res.return(ErrorMap.SUCCESSFUL.Code, profile);

@@ -6,6 +6,7 @@ import { JwtAuthGuard } from "../../guards/jwt-auth.guard";
 import { AuthUserInterceptor } from "../../interceptors/auth-user-interceptor.service";
 import { IProfileService } from "../services/iprofile.service";
 import { UpdateProfileRequest } from "../dtos/requests/profile/update-profile.request";
+import { UpdateAvatarRequest } from "../dtos/requests/profile/update-avatar.request";
 
 @Controller(CONTROLLER_CONSTANTS.PROFILE)
 @ApiTags(CONTROLLER_CONSTANTS.PROFILE)
@@ -45,5 +46,16 @@ export class ProfileController {
     public async updateProfile(@Param('id') id: number, @Body() request: UpdateProfileRequest) {
         this._logger.log('========== Update profile ==========');
         return await this._profileService.updateProfile(id, request);
+    }
+
+    @Put(URL_CONSTANTS.UPDATE_AVATAR)
+    @ApiOperation({ summary: 'Update avatar' })
+    @ApiResponse({ status: 200, description: 'The result returned is the ResponseDto class', schema: {} })
+    @UseGuards(JwtAuthGuard)
+    @UseInterceptors(AuthUserInterceptor)
+    @ApiBearerAuth()
+    public async updateAvatar(@Body() request: UpdateAvatarRequest) {
+        this._logger.log('========== Update avatar ==========');
+        return await this._profileService.updateAvatar(request);
     }
 }

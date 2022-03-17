@@ -1,3 +1,4 @@
+import { CommentEntity } from "../entities/comment.entity";
 import { PostEntity } from "../entities/post.entity";
 import { ProfileEntity } from "../entities/profile.entity";
 import { UserEntity } from "../entities/user.entity";
@@ -22,4 +23,13 @@ export const MAPPER_CONFIG = {
 
     UPDATE_POST_MAPPING: AutoMapperUtil.createMap().mapProperties((s: PostEntity) => [s.content, s.privacySettingId])
         .fromProperties((s: MODULE_REQUEST.UpdatePostAbstractRequest) => [s.content, s.privacySettingId]),
+
+    UPDATE_AVATAR_MAPPING: AutoMapperUtil.createMap().mapProperties((s: ProfileEntity) => [s.id, s.avatar])
+        .fromProperties((s: MODULE_REQUEST.UpdateAvatarAbstractRequest) => [s.profileId, s.avatar]),
+
+    CREATE_COMMENT_MAPPING: AutoMapperUtil.createMap().mapProperties((s: CommentEntity) => [s.postId, s.content])
+        .fromProperties((s: MODULE_REQUEST.CreateCommentAbstractRequest) => [s.postId, s.content]),
+
+    UPDATE_COMMENT_MAPPING: AutoMapperUtil.createMap().mapProperties((s: CommentEntity) => [s.content])
+        .fromProperties((s: MODULE_REQUEST.UpdateCommentAbstractRequest) => [s.content]),
 }

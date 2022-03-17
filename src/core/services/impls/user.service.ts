@@ -165,7 +165,7 @@ export class UserService extends BaseService implements IUserService {
             this._logger.error(`${error.stack}`);
             return res.return(ErrorMap.E500.Code);
         }
-     }
+    }
 
 
 

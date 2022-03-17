@@ -6,7 +6,9 @@ export const CONTROLLER_CONSTANTS = {
     USER: 'user',
     PROFILE: 'profile',
     POST: 'post',
-    PHOTO: 'photo'
+    PHOTO: 'photo',
+    UPLOAD_FILE: 'upload-file',
+    COMMENT: 'comment'
 }
 
 export const URL_CONSTANTS = {
@@ -20,5 +22,8 @@ export const URL_CONSTANTS = {
     UPDATE_LIKES: 'update/likes',
     GET_POST_LIST_NEWS_FEED: 'list-newsfeed',
     GET_POST_LIST_WALL: 'list-wall',
-    GET_PHOTO_LIST_BY_USER_ID: 'list'
+    GET_PHOTO_LIST_BY_USER_ID: 'list',
+    UPLOAD_SINGLE_IMAGE: 'upload-single-image/:folderName',
+    UPDATE_AVATAR: 'update/avatar',
+    GET_COMMENT_LIST_BY_POST_ID: 'list'
 }

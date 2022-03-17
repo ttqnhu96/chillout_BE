@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsEnum,  IsInt,  IsNotEmpty, Min } from "class-validator";
+import { IsEnum,  IsNotEmpty } from "class-validator";
 import { LANGUAGE_ENUM } from "../../../common/constants/common.constant";
 
 export class UpdateUserLanguageRequest {

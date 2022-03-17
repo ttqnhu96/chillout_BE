@@ -43,6 +43,10 @@ export const ErrorMap = {
         Code: 'E010',
         Message: `Photo does not exist.`
     },
+    E011: {
+        Code: 'E011',
+        Message: `Comment does not exist.`
+    },
 
     E400: {
         Code: 'E400',

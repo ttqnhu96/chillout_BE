@@ -3,12 +3,12 @@ import { REPOSITORY_INTERFACE } from "../../config/module.config";
 import { BaseService } from "./base.service";
 import { IPhotoService } from "../iphoto.service";
 import { IPhotoRepository } from "../../repositories/iphoto.repository";
-import { GetPhotoListByUserIdRequest } from "../../dtos/requests/photo/get-photo-list-by-user-id.request";
 import { ResponseDto } from "../../dtos/responses/response.dto";
 import { ErrorMap } from "../../common/error.map";
 import { IPostRepository } from "../../repositories/ipost.repository";
 import { CommonUtil } from "../../utils/common.util";
 import { PRIVACY_SETTING } from "../../common/constants/common.constant";
+import { GetPhotoListByUserIdRequest } from "../../dtos/requests/photo/get-photo-list-by-user-id.request";
 
 @Injectable()
 export class PhotoService extends BaseService implements IPhotoService {
@@ -25,7 +25,7 @@ export class PhotoService extends BaseService implements IPhotoService {
      * @param request
      */
     async getPhotoListByUserId(request: GetPhotoListByUserIdRequest): Promise<ResponseDto> {
-        this._logger.log("============== Get post list in wall ==============");
+        this._logger.log("============== Get photo list by user id ==============");
         const res = new ResponseDto();
         try {
             const photoList = await this._photoRepos.getPhotoListByUserId(request);

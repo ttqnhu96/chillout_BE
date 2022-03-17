@@ -27,6 +27,12 @@ import { PostController } from "./controllers/post.controller";
 import { PhotoRepository } from "./repositories/impls/photo.repository";
 import { PhotoService } from "./services/impls/photo.service";
 import { PhotoController } from "./controllers/photo.controller";
+import { UploadFileService } from "./services/impls/upload-file.service";
+import { UploadFileController } from "./controllers/upload-file.controller";
+import { S3UploadFileUtil } from "./utils/aws-s3/s3-upload-file.util";
+import { CommentController } from "./controllers/comment.controller";
+import { CommentService } from "./services/impls/comment.service";
+import { CommentRepository } from "./repositories/impls/comment.repository";
 
 const controllers = [
     CityController,
@@ -36,7 +42,9 @@ const controllers = [
     UserController,
     ProfileController,
     PostController,
-    PhotoController
+    PhotoController,
+    UploadFileController,
+    CommentController
 ];
 
 const entities = [
@@ -47,10 +55,12 @@ const entities = [
     ENTITIES_CONFIG.USER,
     ENTITIES_CONFIG.PROFILE,
     ENTITIES_CONFIG.POST,
-    ENTITIES_CONFIG.PHOTO
+    ENTITIES_CONFIG.PHOTO,
+    ENTITIES_CONFIG.COMMENT
 ]
 
 const providers = [
+    S3UploadFileUtil
 ]
 
 @Global()
@@ -96,6 +106,10 @@ const providers = [
             provide: REPOSITORY_INTERFACE.IPHOTO_REPOSITORY,
             useClass: PhotoRepository
         },
+        {
+            provide: REPOSITORY_INTERFACE.ICOMMENT_REPOSITORY,
+            useClass: CommentRepository
+        },
 
         //service
         {
@@ -129,6 +143,14 @@ const providers = [
         {
             provide: SERVICE_INTERFACE.IPHOTO_SERVICE,
             useClass: PhotoService
+        },
+        {
+            provide: SERVICE_INTERFACE.IUPLOAD_SERVICE,
+            useClass: UploadFileService
+        },
+        {
+            provide: SERVICE_INTERFACE.ICOMMENT_SERVICE,
+            useClass: CommentService
         },
         //Provider
 
