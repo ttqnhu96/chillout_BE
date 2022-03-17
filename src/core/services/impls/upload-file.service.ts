@@ -28,4 +28,22 @@ export class UploadFileService implements IUploadFileService {
             return res.return(ErrorMap.E500.Code);
         }
     }
+
+    /**
+     * uploadMultiImage
+     * @param files 
+     */
+    async uploadMultiImage(files: any[], folderName: string) {
+        this._logger.log("============== Upload multi file ==============");
+        const res = new ResponseDto;
+        try {
+            const result = await this._uploadFileUtil.uploadMulti(folderName, files);
+            return res.return(ErrorMap.SUCCESSFUL.Code, result);
+        } catch (error) {
+            this._logger.error(`${ErrorMap.E500.Code}: ${ErrorMap.E500.Message}`);
+            this._logger.error(`${error.name}: ${error.message}`);
+            this._logger.error(`${error.stack}`);
+            return res.return(ErrorMap.E500.Code);
+        }
+    }
 }

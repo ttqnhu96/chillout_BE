@@ -7,6 +7,9 @@ import { ResponseDto } from "../../dtos/responses/response.dto";
 import { BaseService } from "./base.service";
 import { ICollegeService } from "../icollege.service";
 import { ICollegeRepository } from "../../repositories/icollege.repository";
+import { CreateCollegeRequest } from "../../dtos/requests/college/create-college.request";
+import { AutoMapperUtil } from "../../utils/auto-mapper/auto-mapper.util";
+import { MAPPER_CONFIG } from "../../config/mapper.config";
 
 @Injectable()
 export class CollegeService extends BaseService implements ICollegeService {
@@ -30,6 +33,27 @@ export class CollegeService extends BaseService implements ICollegeService {
             { id: ORDER_BY.ASC });
 
             return res.return(ErrorMap.SUCCESSFUL.Code, listCollege);
+        } catch (error) {
+            this._logger.error(`${ErrorMap.E500.Code}: ${ErrorMap.E500.Message}`);
+            this._logger.error(`${error.name}: ${error.message}`);
+            this._logger.error(`${error.stack}`);
+            return res.return(ErrorMap.E500.Code);
+        }
+    }
+
+    /**
+     * createCollege
+     * @param request
+     */
+    async createCollege(request: CreateCollegeRequest): Promise<ResponseDto> {
+        this._logger.log("============== Create college ==============");
+        const res = new ResponseDto();
+        try {
+            //Save to College table
+            const dataMapper = AutoMapperUtil.map(MAPPER_CONFIG.CREATE_COLLEGE_MAPPING, request);
+            dataMapper.isActive = true;
+            const college = await this._collegeRepos.create(dataMapper);
+            return res.return(ErrorMap.SUCCESSFUL.Code, college);
         } catch (error) {
             this._logger.error(`${ErrorMap.E500.Code}: ${ErrorMap.E500.Message}`);
             this._logger.error(`${error.name}: ${error.message}`);

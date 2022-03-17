@@ -1,8 +1,8 @@
-import { Controller, Inject, Logger, Param, Post, UploadedFile, UseGuards, UseInterceptors } from "@nestjs/common";
+import { Controller, Inject, Logger, Param, Post, UploadedFile, UploadedFiles, UseGuards, UseInterceptors } from "@nestjs/common";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { ApiBearerAuth, ApiConsumes, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
-import { JwtAuthGuard } from "src/guards/jwt-auth.guard";
-import { AuthUserInterceptor } from "src/interceptors/auth-user-interceptor.service";
+import { JwtAuthGuard } from "../../guards/jwt-auth.guard";
+import { AuthUserInterceptor } from "../../interceptors/auth-user-interceptor.service";
 import { CONTROLLER_CONSTANTS, URL_CONSTANTS } from "../common/constants/api.constant";
 import { SERVICE_INTERFACE } from "../config/module.config";
 import { IUploadFileService } from "../services/iupload-file.service";
@@ -25,5 +25,18 @@ export class UploadFileController {
     async uploadSingleImage(@UploadedFile() file, @Param('folderName') folderName: string) {
         this._logger.log('========== Upload single image to S3 ==========');
         return await this._uploadFileService.uploadSingleImage(file, folderName);
+    }
+
+    @Post(URL_CONSTANTS.UPLOAD_MULTI_IMAGE)
+    @ApiOperation({ summary: 'Upload multi image to S3' })
+    @ApiResponse({ status: 200, description: '', schema: {} })
+    @ApiConsumes('multipart/form-data')
+    @UseInterceptors(FileInterceptor("file"))
+    @UseGuards(JwtAuthGuard)
+    @UseInterceptors(AuthUserInterceptor)
+    @ApiBearerAuth()
+    async uploadMultiImage(@UploadedFiles() files, @Param('folderName') folderName: string) {
+        this._logger.log('========== Upload multi image to S3 ==========');
+        return await this._uploadFileService.uploadMultiImage(files, folderName);
     }
 }

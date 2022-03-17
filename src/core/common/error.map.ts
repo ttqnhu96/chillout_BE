@@ -47,6 +47,10 @@ export const ErrorMap = {
         Code: 'E011',
         Message: `Comment does not exist.`
     },
+    E012: {
+        Code: 'E012',
+        Message: `User who liked post does not exist.`
+    },
 
     E400: {
         Code: 'E400',

@@ -54,13 +54,13 @@ export class CommonUtil {
      * getUserId
      * @returns 
      */
-    async getUserId(): Promise<string> {
+    async getUserId(): Promise<number> {
         const currentUser = await UserService.getAuthUser();
         if (currentUser) {
             const userId = currentUser["id"];
-            return userId;
+            return Number(userId);
         } else {
-            return "";
+            return 0;
         }
     }
 }

@@ -6,6 +6,8 @@ import { ObjectLiteral, Repository } from "typeorm";
 import { IPostRepository } from "../ipost.repository";
 import { GetPostListNewsFeedRequest } from "../../dtos/requests/post/get-post-list-news-feed.request";
 import { GetPostListWallRequest } from "../../dtos/requests/post/get-post-list-wall.request";
+import { GetListUsersLikePostRequest } from "../../dtos/requests/post/get-list-users-like-post.request";
+import { USER_STATUS_ENUM } from "src/core/common/constants/common.constant";
 
 @Injectable()
 export class PostRepository extends BaseRepository implements IPostRepository {
@@ -54,6 +56,26 @@ export class PostRepository extends BaseRepository implements IPostRepository {
         ORDER BY p.created_at DESC
         LIMIT ? OFFSET ?`;
         params.push(request.userId);
+        params.push(request.pageSize);
+        params.push(request.pageIndex * request.pageSize);
+        return await this.repos.query(sql, params);
+    }
+
+    /**
+     * getListUsersLikePost
+     * @param request
+     */
+    async getListUsersLikePost(request: GetListUsersLikePostRequest) {
+        let params = [];
+        const sql = `SELECT pro.avatar AS avatar, pro.full_name AS fullName
+        FROM post_liked_users plu
+            INNER JOIN post p ON p.id = plu.post_id AND p.is_deleted = FALSE
+            INNER JOIN user u ON u.id = plu.user_id AND u.user_status = '${USER_STATUS_ENUM.ACTIVE}'
+            INNER JOIN profile pro ON pro.id = u.profile_id
+        WHERE plu.post_id = ? AND plu.is_deleted = FALSE
+        ORDER BY plu.created_at DESC
+        LIMIT ? OFFSET ?`;
+        params.push(request.postId);
         params.push(request.pageSize);
         params.push(request.pageIndex * request.pageSize);
         return await this.repos.query(sql, params);

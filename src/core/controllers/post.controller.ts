@@ -10,6 +10,7 @@ import { UpdatePostRequest } from "../dtos/requests/post/update-post.request";
 import { UpdateLikesRequest } from "../dtos/requests/post/like-post.request";
 import { GetPostListNewsFeedRequest } from "../dtos/requests/post/get-post-list-news-feed.request";
 import { GetPostListWallRequest } from "../dtos/requests/post/get-post-list-wall.request";
+import { GetListUsersLikePostRequest } from "../dtos/requests/post/get-list-users-like-post.request";
 
 @Controller(CONTROLLER_CONSTANTS.POST)
 @ApiTags(CONTROLLER_CONSTANTS.POST)
@@ -104,5 +105,16 @@ export class PostController {
     public async getPostListWall(@Body() request: GetPostListWallRequest) {
         this._logger.log('========== Get post list in wall ==========');
         return await this._postService.getPostListWall(request);
+    }
+
+    @Post(URL_CONSTANTS.GET_LIST_USERS_LIKE_POST)
+    @ApiOperation({ summary: 'Get list of users who liked post' })
+    @ApiResponse({ status: 200, description: 'The result returned is the ResponseDto class', schema: {} })
+    @UseGuards(JwtAuthGuard)
+    @UseInterceptors(AuthUserInterceptor)
+    @ApiBearerAuth()
+    public async getListUsersLikePost(@Body() request: GetListUsersLikePostRequest) {
+        this._logger.log('========== Get list of users who liked post ==========');
+        return await this._postService.getListUsersLikePost(request);
     }
 }

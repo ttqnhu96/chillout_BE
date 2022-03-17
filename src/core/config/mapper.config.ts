@@ -1,7 +1,11 @@
+import { CityEntity } from "../entities/city.entity";
+import { CollegeEntity } from "../entities/college.entity";
 import { CommentEntity } from "../entities/comment.entity";
 import { PostEntity } from "../entities/post.entity";
 import { ProfileEntity } from "../entities/profile.entity";
+import { SchoolEntity } from "../entities/school.entity";
 import { UserEntity } from "../entities/user.entity";
+import { WorkplaceEntity } from "../entities/workplace.entity";
 import { AutoMapperUtil } from "../utils/auto-mapper/auto-mapper.util";
 import { MODULE_REQUEST } from "./module.config";
 
@@ -32,4 +36,17 @@ export const MAPPER_CONFIG = {
 
     UPDATE_COMMENT_MAPPING: AutoMapperUtil.createMap().mapProperties((s: CommentEntity) => [s.content])
         .fromProperties((s: MODULE_REQUEST.UpdateCommentAbstractRequest) => [s.content]),
+
+    CREATE_CITY_MAPPING: AutoMapperUtil.createMap().mapProperties((s: CityEntity) => [s.name])
+        .fromProperties((s: MODULE_REQUEST.CreateCityAbstractRequest) => [s.name]),
+
+    CREATE_COLLEGE_MAPPING: AutoMapperUtil.createMap().mapProperties((s: CollegeEntity) => [s.name])
+        .fromProperties((s: MODULE_REQUEST.CreateCollegeAbstractRequest) => [s.name]),
+
+    CREATE_SCHOOL_MAPPING: AutoMapperUtil.createMap().mapProperties((s: SchoolEntity) => [s.name])
+        .fromProperties((s: MODULE_REQUEST.CreateSchoolAbstractRequest) => [s.name]),
+
+    CREATE_WORKPLACE_MAPPING: AutoMapperUtil.createMap().mapProperties((s: WorkplaceEntity) => [s.name])
+        .fromProperties((s: MODULE_REQUEST.CreateWorkplaceAbstractRequest) => [s.name]),
+
 }

@@ -17,6 +17,9 @@ import { ORDER_BY, PRIVACY_SETTING } from "../../common/constants/common.constan
 import { GetPostListNewsFeedRequest } from "../../dtos/requests/post/get-post-list-news-feed.request";
 import { GetPostListWallRequest } from "../../dtos/requests/post/get-post-list-wall.request";
 import { ICommentRepository } from "../../repositories/icomment.repository";
+import { GetListUsersLikePostRequest } from "../../dtos/requests/post/get-list-users-like-post.request";
+import { IPostLikedUsersRepository } from "../../repositories/ipost-liked-users.repository";
+import { PostLikedUsersEntity } from "../../entities/post-liked-users.entity";
 
 @Injectable()
 export class PostService extends BaseService implements IPostService {
@@ -24,7 +27,8 @@ export class PostService extends BaseService implements IPostService {
     private _commonUtil: CommonUtil = new CommonUtil();
     constructor(@Inject(REPOSITORY_INTERFACE.IPOST_REPOSITORY) private _postRepos: IPostRepository,
         @Inject(REPOSITORY_INTERFACE.IPHOTO_REPOSITORY) private _photoRepos: IPhotoRepository,
-        @Inject(REPOSITORY_INTERFACE.ICOMMENT_REPOSITORY) private _commentRepos: ICommentRepository) {
+        @Inject(REPOSITORY_INTERFACE.ICOMMENT_REPOSITORY) private _commentRepos: ICommentRepository,
+        @Inject(REPOSITORY_INTERFACE.IPOST_LIKED_USERS_REPOSITORY) private _postLikedUsersRepos: IPostLikedUsersRepository) {
         super(_postRepos);
         this._logger.log("============== Constructor PostService ==============");
     }
@@ -131,17 +135,44 @@ export class PostService extends BaseService implements IPostService {
         this._logger.log("============== Like/unlike post ==============");
         const res = new ResponseDto();
         try {
+            const postId = request.postId;
+            const currentUserId = await this._commonUtil.getUserId();
+
             // Check post existence
             const post = await this._postRepos.findOne({
-                id: request.postId,
+                id: postId,
                 isDeleted: false
             });
             if (!post) {
                 return res.return(ErrorMap.E009.Code);
             }
-            //Update likes
-            post.likes = request.isLike ? (post.likes + 1) : (post.likes - 1);
+
+            //Save to "post_liked_users" table
+            const postLikedUser = await this._postLikedUsersRepos.findOne({
+                postId: postId,
+                userId: currentUserId
+            });
+
+            if (!postLikedUser) {
+                //Create new record if post_liked_users does not exist (the first time user likes post)
+                const newPostLikedUser = new PostLikedUsersEntity;
+                newPostLikedUser.postId = postId;
+                newPostLikedUser.userId = currentUserId;
+                newPostLikedUser.isDeleted = false;
+                await this._postLikedUsersRepos.create(newPostLikedUser);
+
+                //Update likes quantity in post
+                post.likes = post.likes + 1;
+            } else {
+                //Update record if post_liked_users already exists
+                postLikedUser.isDeleted = !postLikedUser.isDeleted;
+                await this._postLikedUsersRepos.update(postLikedUser);
+
+                //Update likes quantity in post
+                post.likes = postLikedUser.isDeleted ? (post.likes - 1) : (post.likes + 1);
+            }
             await this._postRepos.update(post);
+
             return res.return(ErrorMap.SUCCESSFUL.Code, post);
         } catch (error) {
             this._logger.error(`${ErrorMap.E500.Code}: ${ErrorMap.E500.Message}`);
@@ -314,6 +345,24 @@ export class PostService extends BaseService implements IPostService {
                 postList[i].photoList = photoList;
             }
             return res.return(ErrorMap.SUCCESSFUL.Code, postList);
+        } catch (error) {
+            this._logger.error(`${ErrorMap.E500.Code}: ${ErrorMap.E500.Message}`);
+            this._logger.error(`${error.name}: ${error.message}`);
+            this._logger.error(`${error.stack}`);
+            return res.return(ErrorMap.E500.Code);
+        }
+    }
+
+    /**
+     * getListUsersLikePost
+     * @param request
+     */
+    async getListUsersLikePost(request: GetListUsersLikePostRequest): Promise<ResponseDto> {
+        this._logger.log("============== Get list of users who liked post ==============");
+        const res = new ResponseDto();
+        try {
+            const userList = await this._postRepos.getListUsersLikePost(request);
+            return res.return(ErrorMap.SUCCESSFUL.Code, userList);
         } catch (error) {
             this._logger.error(`${ErrorMap.E500.Code}: ${ErrorMap.E500.Message}`);
             this._logger.error(`${error.name}: ${error.message}`);

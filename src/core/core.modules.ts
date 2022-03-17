@@ -33,6 +33,7 @@ import { S3UploadFileUtil } from "./utils/aws-s3/s3-upload-file.util";
 import { CommentController } from "./controllers/comment.controller";
 import { CommentService } from "./services/impls/comment.service";
 import { CommentRepository } from "./repositories/impls/comment.repository";
+import { PostLikedUsersRepository } from "./repositories/impls/post-liked-users.repository";
 
 const controllers = [
     CityController,
@@ -56,7 +57,8 @@ const entities = [
     ENTITIES_CONFIG.PROFILE,
     ENTITIES_CONFIG.POST,
     ENTITIES_CONFIG.PHOTO,
-    ENTITIES_CONFIG.COMMENT
+    ENTITIES_CONFIG.COMMENT,
+    ENTITIES_CONFIG.POST_LIKED_USERS
 ]
 
 const providers = [
@@ -109,6 +111,10 @@ const providers = [
         {
             provide: REPOSITORY_INTERFACE.ICOMMENT_REPOSITORY,
             useClass: CommentRepository
+        },
+        {
+            provide: REPOSITORY_INTERFACE.IPOST_LIKED_USERS_REPOSITORY,
+            useClass: PostLikedUsersRepository
         },
 
         //service

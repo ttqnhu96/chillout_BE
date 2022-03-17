@@ -22,8 +22,10 @@ export const URL_CONSTANTS = {
     UPDATE_LIKES: 'update/likes',
     GET_POST_LIST_NEWS_FEED: 'list-newsfeed',
     GET_POST_LIST_WALL: 'list-wall',
+    GET_LIST_USERS_LIKE_POST: 'list-users-like-post',
     GET_PHOTO_LIST_BY_USER_ID: 'list',
     UPLOAD_SINGLE_IMAGE: 'upload-single-image/:folderName',
+    UPLOAD_MULTI_IMAGE:'upload-multi-image/:folderName',
     UPDATE_AVATAR: 'update/avatar',
     GET_COMMENT_LIST_BY_POST_ID: 'list'
 }

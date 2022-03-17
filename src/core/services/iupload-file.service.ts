@@ -5,4 +5,10 @@ export interface IUploadFileService {
      * @param folderName
      */
     uploadSingleImage(file: any, folderName: string);
+
+    /**
+     * uploadMultiImage
+     * @param files 
+     */
+    uploadMultiImage(files: any[], folderName: string);
 }

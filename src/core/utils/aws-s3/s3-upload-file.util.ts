@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { ConfigService } from "../../../shared/services/config.service";
 import * as AWS from "aws-sdk";
+import { PutObjectRequest } from "aws-sdk/clients/s3";
 
 @Injectable()
 export class S3UploadFileUtil {
@@ -29,7 +30,7 @@ export class S3UploadFileUtil {
     public async upload(folder: string, file: any, fileName: string): Promise<string> {
         const replaceName = this.replaceImgName(fileName);
         const key = `${folder}/${(new Date()).getTime()}_${replaceName}`;
-        const params = {
+        const params: PutObjectRequest = {
             Bucket: this._bucket,
             Key: key,
             Body: file,
@@ -39,6 +40,35 @@ export class S3UploadFileUtil {
             this.throwError(err);
         });
         return key;
+    }
+
+    /**
+     * uploadMulti
+     * @param folder 
+     * @param file 
+     * @returns 
+     */
+    public async uploadMulti(folder: string, files: any[]): Promise<any> {
+        const result = {};
+        files.forEach(async file => {
+            const filename = file.originalname;
+            const replaceName = this.replaceImgName(filename);
+            const key = `${folder}/${(new Date()).getTime()}_${replaceName}`;
+            const params: PutObjectRequest = {
+                Bucket: this._bucket,
+                Key: key,
+                Body: file.buffer,
+                CacheControl: "max-age=2592000"
+            };
+
+            await this._s3.putObject(params, (err, data) => {
+                this.throwError(err);
+            });
+
+            result[file.fieldname] = key;
+        });
+
+        return result;
     }
 
     /**

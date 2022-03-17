@@ -6,6 +6,9 @@ import { ISchoolRepository } from "../../repositories/ischool.repository";
 import { ResponseDto } from "../../dtos/responses/response.dto";
 import { BaseService } from "./base.service";
 import { ISchoolService } from "../ischool.service";
+import { CreateSchoolRequest } from "../../dtos/requests/school/create-school.request";
+import { MAPPER_CONFIG } from "../../config/mapper.config";
+import { AutoMapperUtil } from "../../utils/auto-mapper/auto-mapper.util";
 
 @Injectable()
 export class SchoolService extends BaseService implements ISchoolService {
@@ -29,6 +32,27 @@ export class SchoolService extends BaseService implements ISchoolService {
             { id: ORDER_BY.ASC });
 
             return res.return(ErrorMap.SUCCESSFUL.Code, listSchool);
+        } catch (error) {
+            this._logger.error(`${ErrorMap.E500.Code}: ${ErrorMap.E500.Message}`);
+            this._logger.error(`${error.name}: ${error.message}`);
+            this._logger.error(`${error.stack}`);
+            return res.return(ErrorMap.E500.Code);
+        }
+    }
+
+    /**
+     * createSchool
+     * @param request
+     */
+    async createSchool(request: CreateSchoolRequest): Promise<ResponseDto> {
+        this._logger.log("============== Create school ==============");
+        const res = new ResponseDto();
+        try {
+            //Save to School table
+            const dataMapper = AutoMapperUtil.map(MAPPER_CONFIG.CREATE_SCHOOL_MAPPING, request);
+            dataMapper.isActive = true;
+            const school = await this._schoolRepos.create(dataMapper);
+            return res.return(ErrorMap.SUCCESSFUL.Code, school);
         } catch (error) {
             this._logger.error(`${ErrorMap.E500.Code}: ${ErrorMap.E500.Message}`);
             this._logger.error(`${error.name}: ${error.message}`);
