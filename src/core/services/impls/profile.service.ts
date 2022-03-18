@@ -11,6 +11,7 @@ import { AutoMapperUtil } from "../../utils/auto-mapper/auto-mapper.util";
 import { MAPPER_CONFIG } from "../../config/mapper.config";
 import { CommonUtil } from "../../utils/common.util";
 import { UpdateAvatarRequest } from "../../dtos/requests/profile/update-avatar.request";
+import { SearchRequest } from "../../dtos/requests/common/search.request";
 
 @Injectable()
 export class ProfileService extends BaseService implements IProfileService {
@@ -130,6 +131,24 @@ export class ProfileService extends BaseService implements IProfileService {
             const profile = await this._profileRepos.update(dataMapper);
 
             return res.return(ErrorMap.SUCCESSFUL.Code, profile);
+        } catch (error) {
+            this._logger.error(`${ErrorMap.E500.Code}: ${ErrorMap.E500.Message}`);
+            this._logger.error(`${error.name}: ${error.message}`);
+            this._logger.error(`${error.stack}`);
+            return res.return(ErrorMap.E500.Code);
+        }
+    }
+
+    /**
+     * searchProfile
+     * @param request 
+     */
+    async searchProfile(request: SearchRequest): Promise<any> {
+        this._logger.log("============== Search news ==============");
+        const res = new ResponseDto();
+        try {
+            const profileList = await this._profileRepos.searchProfile(request);
+            return res.return(ErrorMap.SUCCESSFUL.Code, profileList);
         } catch (error) {
             this._logger.error(`${ErrorMap.E500.Code}: ${ErrorMap.E500.Message}`);
             this._logger.error(`${error.name}: ${error.message}`);

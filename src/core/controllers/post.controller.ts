@@ -11,6 +11,7 @@ import { UpdateLikesRequest } from "../dtos/requests/post/like-post.request";
 import { GetPostListNewsFeedRequest } from "../dtos/requests/post/get-post-list-news-feed.request";
 import { GetPostListWallRequest } from "../dtos/requests/post/get-post-list-wall.request";
 import { GetListUsersLikePostRequest } from "../dtos/requests/post/get-list-users-like-post.request";
+import { SearchRequest } from "../dtos/requests/common/search.request";
 
 @Controller(CONTROLLER_CONSTANTS.POST)
 @ApiTags(CONTROLLER_CONSTANTS.POST)
@@ -116,5 +117,16 @@ export class PostController {
     public async getListUsersLikePost(@Body() request: GetListUsersLikePostRequest) {
         this._logger.log('========== Get list of users who liked post ==========');
         return await this._postService.getListUsersLikePost(request);
+    }
+
+    @Post(URL_CONSTANTS.SEARCH)
+    @ApiOperation({ summary: 'Search post' })
+    @ApiResponse({ status: 200, description: 'The result returned is the ResponseDto class', schema: {} })
+    @UseGuards(JwtAuthGuard)
+    @UseInterceptors(AuthUserInterceptor)
+    @ApiBearerAuth()
+    public async getCommentListByPostId(@Body() request: SearchRequest) {
+        this._logger.log('========== Search post ==========');
+        return await this._postService.searchPost(request);
     }
 }

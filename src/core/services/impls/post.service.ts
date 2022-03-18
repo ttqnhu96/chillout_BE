@@ -20,6 +20,7 @@ import { ICommentRepository } from "../../repositories/icomment.repository";
 import { GetListUsersLikePostRequest } from "../../dtos/requests/post/get-list-users-like-post.request";
 import { IPostLikedUsersRepository } from "../../repositories/ipost-liked-users.repository";
 import { PostLikedUsersEntity } from "../../entities/post-liked-users.entity";
+import { SearchRequest } from "../../dtos/requests/common/search.request";
 
 @Injectable()
 export class PostService extends BaseService implements IPostService {
@@ -363,6 +364,24 @@ export class PostService extends BaseService implements IPostService {
         try {
             const userList = await this._postRepos.getListUsersLikePost(request);
             return res.return(ErrorMap.SUCCESSFUL.Code, userList);
+        } catch (error) {
+            this._logger.error(`${ErrorMap.E500.Code}: ${ErrorMap.E500.Message}`);
+            this._logger.error(`${error.name}: ${error.message}`);
+            this._logger.error(`${error.stack}`);
+            return res.return(ErrorMap.E500.Code);
+        }
+    }
+
+    /**
+     * searchPost
+     * @param request 
+     */
+    async searchPost(request: SearchRequest): Promise<any> {
+        this._logger.log("============== Search news ==============");
+        const res = new ResponseDto();
+        try {
+            const postList = await this._postRepos.searchPost(request);
+            return res.return(ErrorMap.SUCCESSFUL.Code, postList);
         } catch (error) {
             this._logger.error(`${ErrorMap.E500.Code}: ${ErrorMap.E500.Message}`);
             this._logger.error(`${error.name}: ${error.message}`);

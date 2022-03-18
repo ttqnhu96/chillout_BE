@@ -1,3 +1,4 @@
+import { SearchRequest } from "../dtos/requests/common/search.request";
 import { IBaseRepository } from "./ibase.repository";
 
 export interface IProfileRepository extends IBaseRepository {
@@ -6,4 +7,10 @@ export interface IProfileRepository extends IBaseRepository {
      * @param id
      */
     getProfileDetailById(id: number);
+
+    /**
+     * searchProfile
+     * @param request 
+     */
+    searchProfile(request: SearchRequest);
 }

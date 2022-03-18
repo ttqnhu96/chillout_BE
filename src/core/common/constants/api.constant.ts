@@ -1,4 +1,6 @@
 export const CONTROLLER_CONSTANTS = {
+    APP: 'app',
+    COMMON: 'common',
     CITY: 'city',
     SCHOOL: 'school',
     COLLEGE: 'college',
@@ -27,5 +29,6 @@ export const URL_CONSTANTS = {
     UPLOAD_SINGLE_IMAGE: 'upload-single-image/:folderName',
     UPLOAD_MULTI_IMAGE:'upload-multi-image/:folderName',
     UPDATE_AVATAR: 'update/avatar',
-    GET_COMMENT_LIST_BY_POST_ID: 'list'
+    GET_COMMENT_LIST_BY_POST_ID: 'list',
+    SEARCH: 'search'
 }

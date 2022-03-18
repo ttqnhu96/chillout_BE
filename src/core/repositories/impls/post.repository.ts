@@ -7,7 +7,8 @@ import { IPostRepository } from "../ipost.repository";
 import { GetPostListNewsFeedRequest } from "../../dtos/requests/post/get-post-list-news-feed.request";
 import { GetPostListWallRequest } from "../../dtos/requests/post/get-post-list-wall.request";
 import { GetListUsersLikePostRequest } from "../../dtos/requests/post/get-list-users-like-post.request";
-import { USER_STATUS_ENUM } from "src/core/common/constants/common.constant";
+import { COMMON_CONSTANTS, USER_STATUS_ENUM } from "../../common/constants/common.constant";
+import { SearchRequest } from "../../dtos/requests/common/search.request";
 
 @Injectable()
 export class PostRepository extends BaseRepository implements IPostRepository {
@@ -78,6 +79,30 @@ export class PostRepository extends BaseRepository implements IPostRepository {
         params.push(request.postId);
         params.push(request.pageSize);
         params.push(request.pageIndex * request.pageSize);
+        return await this.repos.query(sql, params);
+    }
+
+    /**
+     * searchPost
+     * @param request 
+     */
+    async searchPost(request: SearchRequest) {
+        let params = [];
+        let sql: string = `SELECT pro.full_name AS fullName, pro.avatar AS avatar, p.Id AS id, p.content AS content,
+        p.created_at AS createdAt 
+        FROM post p
+            INNER JOIN user u ON u.id = p.user_id AND u.user_status = '${USER_STATUS_ENUM.ACTIVE}'
+            INNER JOIN profile pro ON pro.id = u.profile_id
+        WHERE p.id > 0 AND p.is_deleted = FALSE`;
+        if (request.attribute && request.attribute.trim().length > 0) {
+            sql += ` AND (p.content LIKE ? ESCAPE '${COMMON_CONSTANTS.PIPE_CHAR}')`;
+            params.push(COMMON_CONSTANTS.PERCENT_CHAR + COMMON_CONSTANTS.PIPE_CHAR + request.attribute + COMMON_CONSTANTS.PERCENT_CHAR);
+        }
+
+        sql += " ORDER BY p.created_at ASC LIMIT ? OFFSET ?";
+        params.push(request.pageSize);
+        params.push(request.pageIndex * request.pageSize);
+
         return await this.repos.query(sql, params);
     }
 }

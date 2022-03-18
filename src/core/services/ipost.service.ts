@@ -1,3 +1,4 @@
+import { SearchRequest } from "../dtos/requests/common/search.request";
 import { CreatePostRequest } from "../dtos/requests/post/create-post.request";
 import { GetListUsersLikePostRequest } from "../dtos/requests/post/get-list-users-like-post.request";
 import { GetPostListNewsFeedRequest } from "../dtos/requests/post/get-post-list-news-feed.request";
@@ -62,4 +63,10 @@ export interface IPostService extends IBaseService {
      * @param request
      */
     getListUsersLikePost(request: GetListUsersLikePostRequest): Promise<ResponseDto>;
+
+    /**
+     * searchPost
+     * @param request 
+     */
+    searchPost(request: SearchRequest);
 }

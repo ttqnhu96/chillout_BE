@@ -8,6 +8,8 @@ export const COMMON_CONSTANTS = {
     //REGEX_NAME_WITHOUT_SPECIAL_CHARACTER: new RegExp(/^(|[\p{L}\p{Nd}\s]{0,})$/u),
     TIMEZONE: 'UTC',
     START_TIME_STR: '00:00:00',
+    PERCENT_CHAR: '%',
+    PIPE_CHAR: '|',
 }
 
 export const S3_UPLOAD_FOLDER = {

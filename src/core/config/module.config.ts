@@ -35,6 +35,7 @@ export const ENTITIES_CONFIG = {
 }
 
 export const SERVICE_INTERFACE = {
+    ICOMMON_SERVICE: 'ICommonService',
     ICITY_SERVICE: 'ICityService',
     ISCHOOL_SERVICE: 'ISchoolService',
     ICOLLEGE_SERVICE: 'ICollegeService',

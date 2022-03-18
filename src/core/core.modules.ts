@@ -34,18 +34,21 @@ import { CommentController } from "./controllers/comment.controller";
 import { CommentService } from "./services/impls/comment.service";
 import { CommentRepository } from "./repositories/impls/comment.repository";
 import { PostLikedUsersRepository } from "./repositories/impls/post-liked-users.repository";
+import { CommonController } from "./controllers/common.controller";
+import { CommonService } from "./services/impls/common.service";
 
 const controllers = [
-    CityController,
-    SchoolController,
-    CollegeController,
-    WorkplaceController,
     UserController,
     ProfileController,
     PostController,
     PhotoController,
     UploadFileController,
-    CommentController
+    CommentController,
+    CityController,
+    SchoolController,
+    CollegeController,
+    WorkplaceController,
+    CommonController
 ];
 
 const entities = [
@@ -157,6 +160,10 @@ const providers = [
         {
             provide: SERVICE_INTERFACE.ICOMMENT_SERVICE,
             useClass: CommentService
+        },
+        {
+            provide: SERVICE_INTERFACE.ICOMMON_SERVICE,
+            useClass: CommonService
         },
         //Provider
 

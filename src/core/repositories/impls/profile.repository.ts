@@ -5,6 +5,8 @@ import { BaseRepository } from "./base.repository";
 import { ObjectLiteral, Repository } from "typeorm";
 import { IProfileRepository } from "../iprofile.repository";
 import { ConfigService } from "../../../shared/services/config.service";
+import { SearchRequest } from "../../dtos/requests/common/search.request";
+import { COMMON_CONSTANTS, USER_STATUS_ENUM } from "../../common/constants/common.constant";
 
 @Injectable()
 export class ProfileRepository extends BaseRepository implements IProfileRepository {
@@ -33,5 +35,27 @@ export class ProfileRepository extends BaseRepository implements IProfileReposit
         FROM Profile p
         WHERE p.Id = ?`;
         return await this.repos.query(sql, [id]);
+    }
+
+    /**
+     * searchProfile
+     * @param request 
+     */
+    async searchProfile(request: SearchRequest) {
+        let params = [];
+        let sql: string = `SELECT p.Id AS id, p.full_name AS fullName, p.avatar AS avatar, (SELECT Name FROM City WHERE Id = p.city_id) AS cityName 
+        FROM profile p
+            INNER JOIN user u ON u.profile_id = p.id AND u.user_status = '${USER_STATUS_ENUM.ACTIVE}'
+        WHERE p.id > 0`;
+        if (request.attribute && request.attribute.trim().length > 0) {
+            sql += ` AND (p.full_name LIKE ? ESCAPE '${COMMON_CONSTANTS.PIPE_CHAR}')`;
+            params.push(COMMON_CONSTANTS.PERCENT_CHAR + COMMON_CONSTANTS.PIPE_CHAR + request.attribute + COMMON_CONSTANTS.PERCENT_CHAR);
+        }
+
+        sql += " ORDER BY p.full_name ASC LIMIT ? OFFSET ?";
+        params.push(request.pageSize);
+        params.push(request.pageIndex * request.pageSize);
+
+        return await this.repos.query(sql, params);
     }
 }

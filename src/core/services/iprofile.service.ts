@@ -1,3 +1,4 @@
+import { SearchRequest } from "../dtos/requests/common/search.request";
 import { UpdateAvatarRequest } from "../dtos/requests/profile/update-avatar.request";
 import { UpdateProfileRequest } from "../dtos/requests/profile/update-profile.request";
 import { ResponseDto } from "../dtos/responses/response.dto";
@@ -34,4 +35,10 @@ export interface IProfileService extends IBaseService {
      * @param request
      */
     updateAvatar(request: UpdateAvatarRequest): Promise<any>;
+
+    /**
+     * searchProfile
+     * @param request 
+     */
+     searchProfile(request: SearchRequest): Promise<any>;
 }

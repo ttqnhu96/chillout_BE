@@ -1,3 +1,4 @@
+import { SearchRequest } from "../dtos/requests/common/search.request";
 import { GetListUsersLikePostRequest } from "../dtos/requests/post/get-list-users-like-post.request";
 import { GetPostListNewsFeedRequest } from "../dtos/requests/post/get-post-list-news-feed.request";
 import { GetPostListWallRequest } from "../dtos/requests/post/get-post-list-wall.request";
@@ -21,4 +22,10 @@ export interface IPostRepository extends IBaseRepository {
      * @param request
      */
     getListUsersLikePost(request: GetListUsersLikePostRequest);
+
+    /**
+     * searchPost
+     * @param request 
+     */
+    searchPost(request: SearchRequest);
 }
