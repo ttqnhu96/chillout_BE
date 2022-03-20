@@ -20,8 +20,8 @@ export class CommentRepository extends BaseRepository implements ICommentReposit
      */
     async getCommentListByPostId(request: GetCommentListByPostIdRequest) {
         let params = [];
-        const sql = `SELECT c.id AS id, c.content AS content, c.post_id AS postId, c.user_id AS userId, 
-        c.created_at AS createdAt, c.updated_at AS updatedAt, pro.full_name AS fullName, pro.avatar AS avatar
+        const sql = `SELECT c.id AS id, c.content AS content, c.post_id AS postId, c.user_id AS userId, c.created_at AS createdAt, 
+        c.updated_at AS updatedAt, pro.first_name AS firstName, pro.last_name AS lastName, pro.avatar AS avatar
         FROM Comment c
             INNER JOIN Post p ON p.id = c.post_id AND p.is_deleted = FALSE
             INNER JOIN User u ON u.id = c.user_id

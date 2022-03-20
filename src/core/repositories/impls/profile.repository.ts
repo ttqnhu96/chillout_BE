@@ -24,7 +24,7 @@ export class ProfileRepository extends BaseRepository implements IProfileReposit
      * @param id
      */
     async getProfileDetailById(id: number) {
-        const sql = `SELECT p.full_name AS fullName, p.gender AS gender, p.birthday AS birthday,
+        const sql = `SELECT p.first_name AS firstName, p.last_name AS lastName, p.gender AS gender, p.birthday AS birthday,
             SUBSTR(p.phone, 
             -(CHAR_LENGTH(p.phone)-(SELECT CHAR_LENGTH('${this._nationalPhone}'))), 
             CHAR_LENGTH(p.phone)-(SELECT CHAR_LENGTH('${this._nationalPhone}'))) AS phone, p.email AS email, p.bio AS bio,
@@ -43,16 +43,19 @@ export class ProfileRepository extends BaseRepository implements IProfileReposit
      */
     async searchProfile(request: SearchRequest) {
         let params = [];
-        let sql: string = `SELECT p.Id AS id, p.full_name AS fullName, p.avatar AS avatar, (SELECT Name FROM City WHERE Id = p.city_id) AS cityName 
+        let sql: string = `SELECT p.Id AS id, p.first_name AS firstName, p.last_name AS lastName, 
+        p.avatar AS avatar, (SELECT Name FROM City WHERE Id = p.city_id) AS cityName 
         FROM profile p
             INNER JOIN user u ON u.profile_id = p.id AND u.user_status = '${USER_STATUS_ENUM.ACTIVE}'
         WHERE p.id > 0`;
         if (request.attribute && request.attribute.trim().length > 0) {
-            sql += ` AND (p.full_name LIKE ? ESCAPE '${COMMON_CONSTANTS.PIPE_CHAR}')`;
+            sql += ` AND ((p.first_name LIKE ? ESCAPE '${COMMON_CONSTANTS.PIPE_CHAR}')
+                        OR (p.last_name LIKE ? ESCAPE '${COMMON_CONSTANTS.PIPE_CHAR}'))`;
+            params.push(COMMON_CONSTANTS.PERCENT_CHAR + COMMON_CONSTANTS.PIPE_CHAR + request.attribute + COMMON_CONSTANTS.PERCENT_CHAR);
             params.push(COMMON_CONSTANTS.PERCENT_CHAR + COMMON_CONSTANTS.PIPE_CHAR + request.attribute + COMMON_CONSTANTS.PERCENT_CHAR);
         }
 
-        sql += " ORDER BY p.full_name ASC LIMIT ? OFFSET ?";
+        sql += " ORDER BY p.first_name ASC LIMIT ? OFFSET ?";
         params.push(request.pageSize);
         params.push(request.pageIndex * request.pageSize);
 

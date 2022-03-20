@@ -3,8 +3,11 @@ import { Column, Entity } from "typeorm";
 
 @Entity({ name: 'profile' })
 export class ProfileEntity extends BaseEntityAutoId {
-    @Column({ name: 'full_name' })
-    fullName: string;
+    @Column({ name: 'first_name' })
+    firstName: string;
+
+    @Column({ name: 'last_name' })
+    lastName: string;
 
     @Column({ name: 'gender' })
     gender: string;

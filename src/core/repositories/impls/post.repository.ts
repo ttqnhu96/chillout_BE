@@ -68,7 +68,7 @@ export class PostRepository extends BaseRepository implements IPostRepository {
      */
     async getListUsersLikePost(request: GetListUsersLikePostRequest) {
         let params = [];
-        const sql = `SELECT pro.avatar AS avatar, pro.full_name AS fullName
+        const sql = `SELECT pro.avatar AS avatar, pro.first_name AS firstName, pro.last_name AS lastName
         FROM post_liked_users plu
             INNER JOIN post p ON p.id = plu.post_id AND p.is_deleted = FALSE
             INNER JOIN user u ON u.id = plu.user_id AND u.user_status = '${USER_STATUS_ENUM.ACTIVE}'
@@ -88,8 +88,8 @@ export class PostRepository extends BaseRepository implements IPostRepository {
      */
     async searchPost(request: SearchRequest) {
         let params = [];
-        let sql: string = `SELECT pro.full_name AS fullName, pro.avatar AS avatar, p.Id AS id, p.content AS content,
-        p.created_at AS createdAt 
+        let sql: string = `SELECT pro.first_name AS firstName, pro.last_name AS lastName, pro.avatar AS avatar, 
+        p.Id AS id, p.content AS content, p.created_at AS createdAt 
         FROM post p
             INNER JOIN user u ON u.id = p.user_id AND u.user_status = '${USER_STATUS_ENUM.ACTIVE}'
             INNER JOIN profile pro ON pro.id = u.profile_id

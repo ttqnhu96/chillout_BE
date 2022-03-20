@@ -13,10 +13,15 @@ export class CreateUserRequest {
     @ApiProperty()
     password: string;
 
-    @IsNotEmpty({message: 'Full name is required'})
-    @MaxLength(255, { message: 'Full name must be less than or equal to 255 characters.' })
+    @IsNotEmpty({message: 'First name is required'})
+    @MaxLength(255, { message: 'First name must be less than or equal to 255 characters.' })
     @ApiProperty()
-    fullName: string;
+    firstName: string;
+
+    @IsNotEmpty({message: 'Last name is required'})
+    @MaxLength(255, { message: 'Last name must be less than or equal to 255 characters.' })
+    @ApiProperty()
+    lastName: string;
 
     @IsNotEmpty({message: 'Birthday is required'})
     @ApiProperty()

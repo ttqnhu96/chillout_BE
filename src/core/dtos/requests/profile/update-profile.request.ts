@@ -3,10 +3,15 @@ import { IsEmail, IsEnum, IsInt, IsNotEmpty, IsString, Matches, MaxLength, Min }
 import { COMMON_CONSTANTS, GENDER_ENUM } from "../../../common/constants/common.constant";
 
 export class UpdateProfileRequest {
-    @IsNotEmpty({message: 'Fullname is required'})
-    @MaxLength(255, { message: 'Full name must be less than or equal to 255 characters.' })
+    @IsNotEmpty({message: 'First name is required'})
+    @MaxLength(255, { message: 'First name must be less than or equal to 255 characters.' })
     @ApiProperty()
-    fullName: string;
+    firstName: string;
+
+    @IsNotEmpty({message: 'Last name is required'})
+    @MaxLength(255, { message: 'Last name must be less than or equal to 255 characters.' })
+    @ApiProperty()
+    lastName: string;
 
     @IsNotEmpty({message: 'Gender is required'})
     @IsEnum(GENDER_ENUM, { message: 'Gender is invalid' })
