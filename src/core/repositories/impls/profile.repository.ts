@@ -25,6 +25,7 @@ export class ProfileRepository extends BaseRepository implements IProfileReposit
      */
     async getProfileDetailById(id: number) {
         const sql = `SELECT p.first_name AS firstName, p.last_name AS lastName, p.gender AS gender, p.birthday AS birthday,
+            p.avatar AS avatar, 
             SUBSTR(p.phone, 
             -(CHAR_LENGTH(p.phone)-(SELECT CHAR_LENGTH('${this._nationalPhone}'))), 
             CHAR_LENGTH(p.phone)-(SELECT CHAR_LENGTH('${this._nationalPhone}'))) AS phone, p.email AS email, p.bio AS bio,

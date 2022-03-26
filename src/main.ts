@@ -10,7 +10,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   // enable cors
-  //app.enableCors();
+  app.enableCors();
 
   const configService = app.select(SharedModule).get(ConfigService);
 

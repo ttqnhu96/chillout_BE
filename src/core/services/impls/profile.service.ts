@@ -60,7 +60,7 @@ export class ProfileService extends BaseService implements IProfileService {
                 return res.return(ErrorMap.E007.Code);
             }
 
-            return res.return(ErrorMap.SUCCESSFUL.Code, profile);
+            return res.return(ErrorMap.SUCCESSFUL.Code, profile[0]);
         } catch (error) {
             this._logger.error(`${ErrorMap.E500.Code}: ${ErrorMap.E500.Message}`);
             this._logger.error(`${error.name}: ${error.message}`);

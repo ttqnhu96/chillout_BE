@@ -95,7 +95,8 @@ export class UserService extends BaseService implements IUserService {
             const data: AuthPayload = {
                 id: user.id,
                 username: user.username,
-                userType: user.userType
+                userType: user.userType,
+                profileId: user.profileId
             };
 
             data['accessToken'] = this._jwtService.sign(data);
