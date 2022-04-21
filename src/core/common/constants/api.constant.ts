@@ -35,4 +35,5 @@ export const URL_CONSTANTS = {
     SEARCH: 'search',
     GET_SUGGESTIONS_LIST: 'list-suggestions',
     GET_RECEIVED_FRIEND_REQUEST_LIST: 'list-received',
+    ACCEPT_FRIEND_REQUEST: ':id',
 }

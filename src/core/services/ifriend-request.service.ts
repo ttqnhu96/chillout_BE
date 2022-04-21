@@ -15,4 +15,10 @@ export interface IFriendRequestService extends IBaseService {
      * @param request
      */
     getReceivedFriendRequestList(request: GetReceivedFriendRequestListRequest): Promise<ResponseDto>;
+
+    /**
+     * acceptFriendRequest
+     * @param id
+     */
+    acceptFriendRequest(id: number): Promise<ResponseDto>;
 }

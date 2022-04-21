@@ -61,8 +61,9 @@ export class ProfileService extends BaseService implements IProfileService {
             if (!profile) {
                 return res.return(ErrorMap.E007.Code);
             }
+            console.log(profile[0])
             const friendList = await this._relationshipRepos.getFriendList({
-                userId: profile.userId,
+                userId: profile[0].userId,
                 isPaginated: false,
                 pageIndex: 0,
                 pageSize: 0

@@ -55,6 +55,10 @@ export const ErrorMap = {
         Code: 'E013',
         Message: `Friend request existed.`
     },
+    E014: {
+        Code: 'E014',
+        Message: `Friend request does not exist.`
+    },
 
     E400: {
         Code: 'E400',
