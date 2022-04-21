@@ -22,17 +22,22 @@ export class RelationshipRepository extends BaseRepository implements IRelations
     async getSuggestionsList(request: GetSuggestionsListRequest) {
         let params = [];
         const sql = `SELECT u.id AS userId, u.username AS username, pro.id AS profileId, 
-        pro.first_name AS firstName, pro.last_name AS lastName, pro.avatar AS avatar
-        FROM user u
-            LEFT JOIN relationship r ON (r.user_id_1 = u.id OR r.user_id_2 = u.id)
-            INNER JOIN profile pro ON pro.id = u.profile_id
-        WHERE u.id != ?
-            AND u.id NOT IN (CASE WHEN r.user_id_1 = ? 
+            pro.first_name AS firstName, pro.last_name AS lastName, pro.avatar AS avatar
+        FROM user u 
+			INNER JOIN profile pro ON pro.id = u.profile_id 
+		WHERE u.id != ? AND u.Id NOT IN 
+            (SELECT u.Id 
+                FROM user u
+                    LEFT JOIN relationship r ON (r.user_id_1 = u.id OR r.user_id_2 = u.id)
+                    INNER JOIN profile pro ON pro.id = u.profile_id
+            WHERE u.id != ?
+            AND u.id IN (CASE WHEN r.user_id_1 = ? 
                 THEN (SELECT r.user_id_2 FROM relationship r WHERE r.user_id_1 = ?) 
-                ELSE (SELECT r.user_id_1 FROM relationship r WHERE r.user_id_2 = ?) END)
+                ELSE (SELECT r.user_id_1 FROM relationship r WHERE r.user_id_2 = ?) END))
         ORDER BY pro.first_name ASC`;
         const sqlPagination = ` LIMIT ? OFFSET ?`;
 
+        params.push(request.userId);
         params.push(request.userId);
         params.push(request.userId);
         params.push(request.userId);
