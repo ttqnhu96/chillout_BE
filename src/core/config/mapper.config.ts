@@ -1,6 +1,7 @@
 import { CityEntity } from "../entities/city.entity";
 import { CollegeEntity } from "../entities/college.entity";
 import { CommentEntity } from "../entities/comment.entity";
+import { FriendRequestEntity } from "../entities/friend-request.entity";
 import { PostEntity } from "../entities/post.entity";
 import { ProfileEntity } from "../entities/profile.entity";
 import { SchoolEntity } from "../entities/school.entity";
@@ -48,5 +49,8 @@ export const MAPPER_CONFIG = {
 
     CREATE_WORKPLACE_MAPPING: AutoMapperUtil.createMap().mapProperties((s: WorkplaceEntity) => [s.name])
         .fromProperties((s: MODULE_REQUEST.CreateWorkplaceAbstractRequest) => [s.name]),
+
+    CREATE_FRIEND_REQUEST_MAPPING: AutoMapperUtil.createMap().mapProperties((s: FriendRequestEntity) => [s.receiverId])
+        .fromProperties((s: MODULE_REQUEST.CreateFriendRequestAbstractRequest) => [s.receiverId]),
 
 }

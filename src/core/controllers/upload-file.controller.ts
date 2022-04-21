@@ -1,5 +1,5 @@
 import { Controller, Inject, Logger, Param, Post, UploadedFile, UploadedFiles, UseGuards, UseInterceptors } from "@nestjs/common";
-import { FileInterceptor } from "@nestjs/platform-express";
+import { FileInterceptor, AnyFilesInterceptor } from "@nestjs/platform-express";
 import { ApiBearerAuth, ApiConsumes, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { JwtAuthGuard } from "../../guards/jwt-auth.guard";
 import { AuthUserInterceptor } from "../../interceptors/auth-user-interceptor.service";
@@ -31,7 +31,7 @@ export class UploadFileController {
     @ApiOperation({ summary: 'Upload multi image to S3' })
     @ApiResponse({ status: 200, description: '', schema: {} })
     @ApiConsumes('multipart/form-data')
-    @UseInterceptors(FileInterceptor("file"))
+    @UseInterceptors(AnyFilesInterceptor())
     @UseGuards(JwtAuthGuard)
     @UseInterceptors(AuthUserInterceptor)
     @ApiBearerAuth()

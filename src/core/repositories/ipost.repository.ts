@@ -13,9 +13,10 @@ export interface IPostRepository extends IBaseRepository {
 
     /**
      * getPostListWall
+     * @param currentUserId
      * @param request
      */
-    getPostListWall(request: GetPostListWallRequest);
+    getPostListWall(currentUserId: number, request: GetPostListWallRequest);
 
     /**
      * getListUsersLikePost

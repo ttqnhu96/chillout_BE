@@ -7,7 +7,7 @@ import { IPostRepository } from "../ipost.repository";
 import { GetPostListNewsFeedRequest } from "../../dtos/requests/post/get-post-list-news-feed.request";
 import { GetPostListWallRequest } from "../../dtos/requests/post/get-post-list-wall.request";
 import { GetListUsersLikePostRequest } from "../../dtos/requests/post/get-list-users-like-post.request";
-import { COMMON_CONSTANTS, USER_STATUS_ENUM } from "../../common/constants/common.constant";
+import { COMMON_CONSTANTS, PRIVACY_SETTING, USER_STATUS_ENUM } from "../../common/constants/common.constant";
 import { SearchRequest } from "../../dtos/requests/common/search.request";
 
 @Injectable()
@@ -24,9 +24,11 @@ export class PostRepository extends BaseRepository implements IPostRepository {
      */
     async getPostListNewsFeed(request: GetPostListNewsFeedRequest) {
         let params = [];
-        const sql = `SELECT p.id AS id, p.content AS content, p.privacy_setting_id AS privacySettingId, p.likes AS likes, 
+        const sql = `SELECT p.id AS id, p.content AS content, p.privacy_setting_id AS privacySettingId, 
+        (SELECT COUNT(plu.id) FROM post_liked_users plu WHERE plu.post_id = p.id AND plu.is_deleted = FALSE) AS likes, 
         p.user_id AS userId, p.created_at AS createdAt, p.updated_at AS updatedAt,
-        (SELECT COUNT(c.id) FROM comment c WHERE c.post_id = p.id) AS totalComment
+        (SELECT COUNT(c.id) FROM comment c WHERE c.post_id = p.id AND c.is_deleted = FALSE) AS totalComment,
+        pro.first_name AS firstName, pro.last_name AS lastName, pro.avatar AS avatar
         FROM Post p
             INNER JOIN User u ON u.id = p.user_id
             INNER JOIN Profile pro ON pro.id = u.profile_id
@@ -34,32 +36,50 @@ export class PostRepository extends BaseRepository implements IPostRepository {
         WHERE ( p.user_id = ? 
             OR ( p.user_id = r.user_id_2 AND r.user_id_1 = ? ) )
             AND p.is_deleted = FALSE
-        ORDER BY p.created_at DESC
-        LIMIT ? OFFSET ?`;
+        ORDER BY p.created_at DESC`;
+        const sqlPagination = ` LIMIT ? OFFSET ?`;
+
         params.push(request.userId);
         params.push(request.userId);
-        params.push(request.pageSize);
-        params.push(request.pageIndex * request.pageSize);
-        return await this.repos.query(sql, params);
+        if(request.isPaginated) {
+            params.push(request.pageSize);
+            params.push(request.pageIndex * request.pageSize);
+            return await this.repos.query(sql + sqlPagination, params);
+        } else {
+            return await this.repos.query(sql, params);
+        }
     }
 
     /**
      * getPostListWall
+     * @param currentUserId
      * @param request
      */
-    async getPostListWall(request: GetPostListWallRequest) {
+    async getPostListWall(currentUserId: number, request: GetPostListWallRequest) {
         let params = [];
-        const sql = `SELECT p.id AS id, p.content AS content, p.privacy_setting_id AS privacySettingId, p.likes AS likes, 
+        const sql = `SELECT p.id AS id, pro.first_name AS firstName, pro.last_name AS lastName, p.content AS content, 
+        pro.avatar AS avatar, p.privacy_setting_id AS privacySettingId,
+        (SELECT COUNT(plu.id) FROM post_liked_users plu WHERE plu.post_id = p.id AND plu.is_deleted = FALSE) AS likes, 
         p.user_id AS userId, p.created_at AS createdAt, p.updated_at AS updatedAt, 
-        (SELECT COUNT(c.id) FROM comment c WHERE c.post_id = p.id) AS totalComment
+        (SELECT COUNT(c.id) FROM comment c WHERE c.post_id = p.id AND c.is_deleted = FALSE) AS totalComment
         FROM Post p
+            INNER JOIN user u ON u.id = p.user_id
+            INNER JOIN profile pro ON pro.id = u.profile_id
         WHERE p.user_id = ? AND p.is_deleted = FALSE
-        ORDER BY p.created_at DESC
-        LIMIT ? OFFSET ?`;
+        AND (CASE WHEN p.user_id != ? THEN p.privacy_setting_id = '${PRIVACY_SETTING.PUBLIC}' 
+            ELSE p.privacy_setting_id IN ('${PRIVACY_SETTING.ONLY_ME}', '${PRIVACY_SETTING.PUBLIC}') END)
+        ORDER BY p.created_at DESC`;
+        const sqlPagination = ` LIMIT ? OFFSET ?`;
+
         params.push(request.userId);
-        params.push(request.pageSize);
-        params.push(request.pageIndex * request.pageSize);
-        return await this.repos.query(sql, params);
+        params.push(currentUserId);
+        if(request.isPaginated) {
+            params.push(request.pageSize);
+            params.push(request.pageIndex * request.pageSize);
+            return await this.repos.query(sql + sqlPagination, params);
+        } else {
+            return await this.repos.query(sql, params);
+        }
     }
 
     /**

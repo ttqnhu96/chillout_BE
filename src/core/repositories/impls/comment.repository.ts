@@ -19,19 +19,24 @@ export class CommentRepository extends BaseRepository implements ICommentReposit
      * @param request
      */
     async getCommentListByPostId(request: GetCommentListByPostIdRequest) {
+        let result = [];
         let params = [];
-        const sql = `SELECT c.id AS id, c.content AS content, c.post_id AS postId, c.user_id AS userId, c.created_at AS createdAt, 
-        c.updated_at AS updatedAt, pro.first_name AS firstName, pro.last_name AS lastName, pro.avatar AS avatar
-        FROM Comment c
+        const sqlSelect = `SELECT c.id AS id, c.content AS content, c.post_id AS postId, c.user_id AS userId, c.created_at AS createdAt, 
+        c.updated_at AS updatedAt, pro.first_name AS firstName, pro.last_name AS lastName, pro.avatar AS avatar`;
+        let sqlCount: string = `SELECT COUNT(*) AS Total`;
+        let sql: string = ` FROM Comment c
             INNER JOIN Post p ON p.id = c.post_id AND p.is_deleted = FALSE
             INNER JOIN User u ON u.id = c.user_id
             INNER JOIN Profile pro ON pro.id = u.profile_id
         WHERE c.is_deleted = FALSE AND p.id = ?
-        ORDER BY c.created_at DESC
-        LIMIT ? OFFSET ?`;
+        ORDER BY c.created_at DESC`;
+        let sqlLimit = ` LIMIT ? OFFSET ?`;
         params.push(request.postId);
         params.push(request.pageSize);
         params.push(request.pageIndex * request.pageSize);
-        return await this.repos.query(sql, params);
+
+        result[0] = await this.repos.query(sqlSelect + sql + sqlLimit, params);
+        result[1] = await this.repos.query(sqlCount + sql, params);
+        return result;
     }
 }

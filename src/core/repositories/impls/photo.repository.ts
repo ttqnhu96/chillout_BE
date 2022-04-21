@@ -26,11 +26,16 @@ export class PhotoRepository extends BaseRepository implements IPhotoRepository 
             INNER JOIN Post p ON p.id = pt.post_id AND p.is_deleted = FALSE
             INNER JOIN User u ON u.id = p.user_id
         WHERE u.id = ? AND pt.is_deleted = FALSE
-        ORDER BY pt.created_at DESC
-        LIMIT ? OFFSET ?`;
+        ORDER BY pt.created_at DESC`;
+
+        const sqlPagination = ` LIMIT ? OFFSET ?`;
         params.push(request.userId);
-        params.push(request.pageSize);
-        params.push(request.pageIndex * request.pageSize);
-        return await this.repos.query(sql, params);
+        if(request.isPaginated) {
+            params.push(request.pageSize);
+            params.push(request.pageIndex * request.pageSize);
+            return await this.repos.query(sql + sqlPagination, params);
+        } else {
+            return await this.repos.query(sql, params);
+        }
     }
 }

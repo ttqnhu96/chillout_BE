@@ -13,6 +13,7 @@ import { ICommentService } from "../icomment.service";
 import { CreateCommentRequest } from "../../dtos/requests/comment/create-comment.request";
 import { UpdateCommentRequest } from "../../dtos/requests/comment/update-comment.request";
 import { GetCommentListByPostIdRequest } from "../../dtos/requests/comment/get-comment-list-by-post-id.request";
+import { PaginatorResponse } from "src/core/dtos/responses/paginator-response.dto";
 
 @Injectable()
 export class CommentService extends BaseService implements ICommentService {
@@ -71,7 +72,13 @@ export class CommentService extends BaseService implements ICommentService {
             //Save to Comment table
             const dataMapper = AutoMapperUtil.map(MAPPER_CONFIG.UPDATE_COMMENT_MAPPING, request);
             dataMapper.id = id;
-            const comment = await this._commentRepos.update(dataMapper);
+            await this._commentRepos.update(dataMapper);
+            
+            // Get comment detail by id
+            const comment = await this._commentRepos.findOne({
+                id: id,
+                isDeleted: false
+            });
 
             return res.return(ErrorMap.SUCCESSFUL.Code, comment);
         } catch (error) {
@@ -164,8 +171,14 @@ export class CommentService extends BaseService implements ICommentService {
         this._logger.log("============== Get comment list by post id ==============");
         const res = new ResponseDto();
         try {
-            const commentList = await this._commentRepos.getCommentListByPostId(request);
-            return res.return(ErrorMap.SUCCESSFUL.Code, commentList);
+            let pageDto = new PaginatorResponse;
+            const result = await this._commentRepos.getCommentListByPostId(request);
+            pageDto.pageResults = result[0];
+            pageDto.totalRecord = result[1][0].Total;
+            pageDto.pageIndex = request.pageIndex;
+            pageDto.pageSize = request.pageSize;
+            
+            return res.return(ErrorMap.SUCCESSFUL.Code, pageDto);
         } catch (error) {
             this._logger.error(`${ErrorMap.E500.Code}: ${ErrorMap.E500.Message}`);
             this._logger.error(`${error.name}: ${error.message}`);

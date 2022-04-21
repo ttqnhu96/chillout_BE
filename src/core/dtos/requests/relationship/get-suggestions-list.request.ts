@@ -1,11 +1,11 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsNotEmpty, ValidateIf } from "class-validator";
 
-export class GetPhotoListByUserIdRequest {
+export class GetSuggestionsListRequest {
     @IsNotEmpty({message: 'User id is required'})
     @ApiProperty()
     userId: number;
-    
+
     @IsNotEmpty({message: 'Is paginated is required'})
     @ApiProperty()
     isPaginated: boolean;

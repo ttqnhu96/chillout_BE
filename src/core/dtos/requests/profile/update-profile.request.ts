@@ -26,7 +26,6 @@ export class UpdateProfileRequest {
     @IsString()
     phone: string;
 
-    @IsEmail({}, { message: 'Email is invalid' })
     @Matches(COMMON_CONSTANTS.REGEX_EMAIL, { message: 'Email is invalid' })
     @ApiProperty()
     email: string;
@@ -36,6 +35,7 @@ export class UpdateProfileRequest {
     bio: string;
 
     @ApiProperty()
+    @IsInt()
     cityId: number;
 
     @ApiProperty()

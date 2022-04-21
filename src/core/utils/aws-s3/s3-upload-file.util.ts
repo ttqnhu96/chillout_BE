@@ -49,7 +49,7 @@ export class S3UploadFileUtil {
      * @returns 
      */
     public async uploadMulti(folder: string, files: any[]): Promise<any> {
-        const result = {};
+        const result = [];
         files.forEach(async file => {
             const filename = file.originalname;
             const replaceName = this.replaceImgName(filename);
@@ -65,7 +65,7 @@ export class S3UploadFileUtil {
                 this.throwError(err);
             });
 
-            result[file.fieldname] = key;
+            result.push(key);
         });
 
         return result;

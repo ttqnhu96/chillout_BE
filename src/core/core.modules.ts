@@ -36,6 +36,12 @@ import { CommentRepository } from "./repositories/impls/comment.repository";
 import { PostLikedUsersRepository } from "./repositories/impls/post-liked-users.repository";
 import { CommonController } from "./controllers/common.controller";
 import { CommonService } from "./services/impls/common.service";
+import { RelationshipRepository } from "./repositories/impls/relationship.repository";
+import { RelationshipService } from "./services/impls/relationship.service";
+import { RelationshipController } from "./controllers/relationship.controller";
+import { FriendRequestController } from "./controllers/friend-request.controller";
+import { FriendRequestRepository } from "./repositories/impls/friend-request.repository";
+import { FriendRequestService } from "./services/impls/friend-request.service";
 
 const controllers = [
     UserController,
@@ -48,7 +54,9 @@ const controllers = [
     SchoolController,
     CollegeController,
     WorkplaceController,
-    CommonController
+    CommonController,
+    RelationshipController,
+    FriendRequestController
 ];
 
 const entities = [
@@ -61,7 +69,9 @@ const entities = [
     ENTITIES_CONFIG.POST,
     ENTITIES_CONFIG.PHOTO,
     ENTITIES_CONFIG.COMMENT,
-    ENTITIES_CONFIG.POST_LIKED_USERS
+    ENTITIES_CONFIG.POST_LIKED_USERS,
+    ENTITIES_CONFIG.RELATIONSHIP,
+    ENTITIES_CONFIG.FRIEND_REQUEST
 ]
 
 const providers = [
@@ -119,6 +129,14 @@ const providers = [
             provide: REPOSITORY_INTERFACE.IPOST_LIKED_USERS_REPOSITORY,
             useClass: PostLikedUsersRepository
         },
+        {
+            provide: REPOSITORY_INTERFACE.IRELATIONSHIP_REPOSITORY,
+            useClass: RelationshipRepository
+        },
+        {
+            provide: REPOSITORY_INTERFACE.IFRIEND_REQUEST_REPOSITORY,
+            useClass: FriendRequestRepository
+        },
 
         //service
         {
@@ -164,6 +182,14 @@ const providers = [
         {
             provide: SERVICE_INTERFACE.ICOMMON_SERVICE,
             useClass: CommonService
+        },
+        {
+            provide: SERVICE_INTERFACE.IRELATIONSHIP_SERVICE,
+            useClass: RelationshipService
+        },
+        {
+            provide: SERVICE_INTERFACE.IFRIEND_REQUEST_SERVICE,
+            useClass: FriendRequestService
         },
         //Provider
 

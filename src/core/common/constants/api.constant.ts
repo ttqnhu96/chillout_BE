@@ -10,7 +10,9 @@ export const CONTROLLER_CONSTANTS = {
     POST: 'post',
     PHOTO: 'photo',
     UPLOAD_FILE: 'upload-file',
-    COMMENT: 'comment'
+    COMMENT: 'comment',
+    RELATIONSHIP: 'relationship',
+    FRIEND_REQUEST: 'friend-request'
 }
 
 export const URL_CONSTANTS = {
@@ -30,5 +32,7 @@ export const URL_CONSTANTS = {
     UPLOAD_MULTI_IMAGE:'upload-multi-image/:folderName',
     UPDATE_AVATAR: 'update/avatar',
     GET_COMMENT_LIST_BY_POST_ID: 'list',
-    SEARCH: 'search'
+    SEARCH: 'search',
+    GET_SUGGESTIONS_LIST: 'list-suggestions',
+    GET_RECEIVED_FRIEND_REQUEST_LIST: 'list-received',
 }

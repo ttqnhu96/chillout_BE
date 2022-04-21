@@ -13,7 +13,7 @@ import { PhotoEntity } from "../../entities/photo.entity";
 import { IPhotoRepository } from "../../repositories/iphoto.repository";
 import { UpdatePostRequest } from "../../dtos/requests/post/update-post.request";
 import { UpdateLikesRequest } from "../../dtos/requests/post/like-post.request";
-import { ORDER_BY, PRIVACY_SETTING } from "../../common/constants/common.constant";
+import { COMMON_CONSTANTS, ORDER_BY, PRIVACY_SETTING } from "../../common/constants/common.constant";
 import { GetPostListNewsFeedRequest } from "../../dtos/requests/post/get-post-list-news-feed.request";
 import { GetPostListWallRequest } from "../../dtos/requests/post/get-post-list-wall.request";
 import { ICommentRepository } from "../../repositories/icomment.repository";
@@ -161,18 +161,11 @@ export class PostService extends BaseService implements IPostService {
                 newPostLikedUser.userId = currentUserId;
                 newPostLikedUser.isDeleted = false;
                 await this._postLikedUsersRepos.create(newPostLikedUser);
-
-                //Update likes quantity in post
-                post.likes = post.likes + 1;
             } else {
                 //Update record if post_liked_users already exists
                 postLikedUser.isDeleted = !postLikedUser.isDeleted;
                 await this._postLikedUsersRepos.update(postLikedUser);
-
-                //Update likes quantity in post
-                post.likes = postLikedUser.isDeleted ? (post.likes - 1) : (post.likes + 1);
             }
-            await this._postRepos.update(post);
 
             return res.return(ErrorMap.SUCCESSFUL.Code, post);
         } catch (error) {
@@ -319,6 +312,27 @@ export class PostService extends BaseService implements IPostService {
                     { postId: postList[i].id, isDeleted: false },
                     { createdAt: ORDER_BY.DESC });
                 postList[i].photoList = photoList;
+
+                //Get comments in post
+                // const commentList = await this._commentRepos.findByCondition(
+                //     { postId: postList[i].id, isDeleted: false },
+                //     { createdAt: ORDER_BY.DESC });
+                // postList[i].commentList = commentList;
+                const commentList = await this._commentRepos.getCommentListByPostId(
+                    {
+                        postId: postList[i].id,
+                        pageIndex: 0,
+                        pageSize: COMMON_CONSTANTS.MAX_COMMENTS_IN_A_PAGE
+                    });
+                postList[i].commentList = commentList[0];
+                postList[i].totalComment = commentList[1][0].Total;
+
+                //Get users who liked post
+                const userLikePostListObj = await this._postLikedUsersRepos.findByCondition(
+                    { postId: postList[i].id, isDeleted: false },
+                    { createdAt: ORDER_BY.DESC });
+                const userIdLikePostList = userLikePostListObj.map(item => { return item.userId })
+                postList[i].userIdLikePostList = userIdLikePostList;
             }
             return res.return(ErrorMap.SUCCESSFUL.Code, postList);
         } catch (error) {
@@ -337,13 +351,36 @@ export class PostService extends BaseService implements IPostService {
         this._logger.log("============== Get post list in wall ==============");
         const res = new ResponseDto();
         try {
-            const postList = await this._postRepos.getPostListWall(request);
+            const currentUserId = await this._commonUtil.getUserId();
+            const postList = await this._postRepos.getPostListWall(currentUserId, request);
             for (let i = 0; i < postList.length; i++) {
+
                 //Get photos in post
                 const photoList = await this._photoRepos.findByCondition(
                     { postId: postList[i].id, isDeleted: false },
                     { createdAt: ORDER_BY.DESC });
                 postList[i].photoList = photoList;
+
+                //Get comments in post
+                // const commentList = await this._commentRepos.findByCondition(
+                //     { postId: postList[i].id, isDeleted: false },
+                //     { createdAt: ORDER_BY.DESC });
+                // postList[i].commentList = commentList;
+                const commentList = await this._commentRepos.getCommentListByPostId(
+                    {
+                        postId: postList[i].id,
+                        pageIndex: 0,
+                        pageSize: COMMON_CONSTANTS.MAX_COMMENTS_IN_A_PAGE
+                    });
+                postList[i].commentList = commentList[0];
+                postList[i].totalComment = commentList[1][0].Total;
+
+                //Get users who liked post
+                const userLikePostListObj = await this._postLikedUsersRepos.findByCondition(
+                    { postId: postList[i].id, isDeleted: false },
+                    { createdAt: ORDER_BY.DESC });
+                const userIdLikePostList = userLikePostListObj.map(item => { return item.userId })
+                postList[i].userIdLikePostList = userIdLikePostList;
             }
             return res.return(ErrorMap.SUCCESSFUL.Code, postList);
         } catch (error) {

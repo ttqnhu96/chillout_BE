@@ -10,6 +10,7 @@ export const COMMON_CONSTANTS = {
     START_TIME_STR: '00:00:00',
     PERCENT_CHAR: '%',
     PIPE_CHAR: '|',
+    MAX_COMMENTS_IN_A_PAGE: 3
 }
 
 export const S3_UPLOAD_FOLDER = {

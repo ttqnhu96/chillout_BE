@@ -12,13 +12,15 @@ import { MAPPER_CONFIG } from "../../config/mapper.config";
 import { CommonUtil } from "../../utils/common.util";
 import { UpdateAvatarRequest } from "../../dtos/requests/profile/update-avatar.request";
 import { SearchRequest } from "../../dtos/requests/common/search.request";
+import { IRelationshipRepository } from "src/core/repositories/irelationship.repository";
 
 @Injectable()
 export class ProfileService extends BaseService implements IProfileService {
     private readonly _logger = new Logger(ProfileService.name);
     private _commonUtil: CommonUtil = new CommonUtil();
     constructor(@Inject(REPOSITORY_INTERFACE.IPROFILE_REPOSITORY) private _profileRepos: IProfileRepository,
-        @Inject(REPOSITORY_INTERFACE.IUSER_REPOSITORY) private _userRepos: IUserRepository) {
+        @Inject(REPOSITORY_INTERFACE.IUSER_REPOSITORY) private _userRepos: IUserRepository,
+        @Inject(REPOSITORY_INTERFACE.IRELATIONSHIP_REPOSITORY) private _relationshipRepos: IRelationshipRepository) {
         super(_profileRepos);
         this._logger.log("============== Constructor ProfileService ==============");
     }
@@ -59,8 +61,16 @@ export class ProfileService extends BaseService implements IProfileService {
             if (!profile) {
                 return res.return(ErrorMap.E007.Code);
             }
+            const friendList = await this._relationshipRepos.getFriendList({
+                userId: profile.userId,
+                isPaginated: false,
+                pageIndex: 0,
+                pageSize: 0
+            })
+            let result = profile[0];
+            result['friendList'] = friendList;
 
-            return res.return(ErrorMap.SUCCESSFUL.Code, profile[0]);
+            return res.return(ErrorMap.SUCCESSFUL.Code, result);
         } catch (error) {
             this._logger.error(`${ErrorMap.E500.Code}: ${ErrorMap.E500.Message}`);
             this._logger.error(`${error.name}: ${error.message}`);
@@ -92,7 +102,9 @@ export class ProfileService extends BaseService implements IProfileService {
             }
 
             //Save data to Profile table
-            request.phone = this._commonUtil.createNationalPhone(request.phone);
+            if (request.phone !== '') {
+                request.phone = this._commonUtil.createNationalPhone(request.phone);
+            }
             const dataMapper = AutoMapperUtil.map(MAPPER_CONFIG.UPDATE_PROFILE_MAPPING, request);
             dataMapper.id = id;
             const profile = await this._profileRepos.update(dataMapper);
@@ -129,7 +141,11 @@ export class ProfileService extends BaseService implements IProfileService {
 
             const dataMapper = AutoMapperUtil.map(MAPPER_CONFIG.UPDATE_AVATAR_MAPPING, request);
             const profile = await this._profileRepos.update(dataMapper);
-
+            const user = await this._userRepos.findOne({ profileId: request.profileId });
+            if(user) {
+                profile['userId'] = user.id;
+            }
+            
             return res.return(ErrorMap.SUCCESSFUL.Code, profile);
         } catch (error) {
             this._logger.error(`${ErrorMap.E500.Code}: ${ErrorMap.E500.Message}`);

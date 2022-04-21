@@ -2,6 +2,7 @@ import { CreateCityRequest } from "../dtos/requests/city/create-city.request";
 import { CreateCollegeRequest } from "../dtos/requests/college/create-college.request";
 import { CreateCommentRequest } from "../dtos/requests/comment/create-comment.request";
 import { UpdateCommentRequest } from "../dtos/requests/comment/update-comment.request";
+import { CreateFriendRequestRequest } from "../dtos/requests/friend-request/create-friend-request.request";
 import { CreatePostRequest } from "../dtos/requests/post/create-post.request";
 import { UpdatePostRequest } from "../dtos/requests/post/update-post.request";
 import { UpdateAvatarRequest } from "../dtos/requests/profile/update-avatar.request";
@@ -13,10 +14,12 @@ import { CreateWorkplaceRequest } from "../dtos/requests/workplace/create-workpl
 import { CityEntity } from "../entities/city.entity";
 import { CollegeEntity } from "../entities/college.entity";
 import { CommentEntity } from "../entities/comment.entity";
+import { FriendRequestEntity } from "../entities/friend-request.entity";
 import { PhotoEntity } from "../entities/photo.entity";
 import { PostLikedUsersEntity } from "../entities/post-liked-users.entity";
 import { PostEntity } from "../entities/post.entity";
 import { ProfileEntity } from "../entities/profile.entity";
+import { RelationshipEntity } from "../entities/relationship.entity";
 import { SchoolEntity } from "../entities/school.entity";
 import { UserEntity } from "../entities/user.entity";
 import { WorkplaceEntity } from "../entities/workplace.entity";
@@ -31,7 +34,9 @@ export const ENTITIES_CONFIG = {
     POST: PostEntity,
     PHOTO: PhotoEntity,
     COMMENT: CommentEntity,
-    POST_LIKED_USERS: PostLikedUsersEntity
+    POST_LIKED_USERS: PostLikedUsersEntity,
+    RELATIONSHIP: RelationshipEntity,
+    FRIEND_REQUEST: FriendRequestEntity
 }
 
 export const SERVICE_INTERFACE = {
@@ -45,7 +50,9 @@ export const SERVICE_INTERFACE = {
     IPOST_SERVICE: 'IPostService',
     IPHOTO_SERVICE: 'IPhotoService',
     IUPLOAD_SERVICE: 'IUploadService',
-    ICOMMENT_SERVICE: 'ICommentService'
+    ICOMMENT_SERVICE: 'ICommentService',
+    IRELATIONSHIP_SERVICE: 'IRelationshipService',
+    IFRIEND_REQUEST_SERVICE: 'IFriendRequestService'
 }
 
 export const REPOSITORY_INTERFACE = {
@@ -58,7 +65,9 @@ export const REPOSITORY_INTERFACE = {
     IPOST_REPOSITORY: 'IPostRepository',
     IPHOTO_REPOSITORY: 'IPhotoRepository',
     ICOMMENT_REPOSITORY: 'ICommentRepository',
-    IPOST_LIKED_USERS_REPOSITORY: 'IPostLikedUsersRepository'
+    IPOST_LIKED_USERS_REPOSITORY: 'IPostLikedUsersRepository',
+    IRELATIONSHIP_REPOSITORY: 'IRelationshipRepository',
+    IFRIEND_REQUEST_REPOSITORY: 'IFriendRequestRepository'
 }
 
 export const REQUEST_CONFIG = {
@@ -74,6 +83,7 @@ export const REQUEST_CONFIG = {
     CREATE_COLLEGE_REQUEST: CreateCollegeRequest,
     CREATE_SCHOOL_REQUEST: CreateSchoolRequest,
     CREATE_WORKPLACE_REQUEST: CreateWorkplaceRequest,
+    CREATE_FRIEND_REQUEST_REQUEST: CreateFriendRequestRequest,
 }
 
 export module MODULE_REQUEST {
@@ -89,4 +99,5 @@ export module MODULE_REQUEST {
     export abstract class CreateCollegeAbstractRequest extends REQUEST_CONFIG.CREATE_COLLEGE_REQUEST{}
     export abstract class CreateSchoolAbstractRequest extends REQUEST_CONFIG.CREATE_SCHOOL_REQUEST{}
     export abstract class CreateWorkplaceAbstractRequest extends REQUEST_CONFIG.CREATE_WORKPLACE_REQUEST{}
+    export abstract class CreateFriendRequestAbstractRequest extends REQUEST_CONFIG.CREATE_FRIEND_REQUEST_REQUEST{}
 }

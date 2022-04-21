@@ -70,6 +70,7 @@ export class PhotoService extends BaseService implements IPhotoService {
             //Delete photo
             photo.isDeleted = true;
             await this._photoRepos.update(photo);
+            photo['userId'] = currentUserId;
 
             return res.return(ErrorMap.SUCCESSFUL.Code, photo);
         } catch (error) {
