@@ -32,9 +32,8 @@ export class PostRepository extends BaseRepository implements IPostRepository {
         FROM Post p
             INNER JOIN User u ON u.id = p.user_id
             INNER JOIN Profile pro ON pro.id = u.profile_id
-            LEFT JOIN Relationship r ON r.id = pro.relationship_id
-        WHERE ( p.user_id = ? 
-            OR ( p.user_id = r.user_id_2 AND r.user_id_1 = ? ) )
+            LEFT JOIN Relationship r ON r.friend_id = u.id
+        WHERE ( p.user_id = ? OR r.user_id = ? )
             AND p.is_deleted = FALSE
         ORDER BY p.created_at DESC`;
         const sqlPagination = ` LIMIT ? OFFSET ?`;
