@@ -27,7 +27,7 @@ export class FriendRequestController {
     }
 
     @Post(URL_CONSTANTS.GET_RECEIVED_FRIEND_REQUEST_LIST)
-    @ApiOperation({ summary: 'Get comment list by post id' })
+    @ApiOperation({ summary: 'Get received friend request list' })
     @ApiResponse({ status: 200, description: 'The result returned is the ResponseDto class', schema: {} })
     @UseGuards(JwtAuthGuard)
     @UseInterceptors(AuthUserInterceptor)

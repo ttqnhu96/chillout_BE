@@ -110,11 +110,17 @@ export class FriendRequestService extends BaseService implements IFriendRequestS
             friendRequest.isAccepted = true;
             await this._friendRequestRepos.update(friendRequest);
 
-            //Save to Relationship table
-            let relationship = new RelationshipEntity;
-            relationship.userId1 = friendRequest.receiverId;
-            relationship.userId2 = friendRequest.senderId;
-            await this._relationshipRepos.create(relationship);
+            //Save to Relationship table (record 1)
+            let relationship1 = new RelationshipEntity;
+            relationship1.userId = friendRequest.receiverId;
+            relationship1.friendId = friendRequest.senderId;
+            await this._relationshipRepos.create(relationship1);
+
+            //Save to Relationship table (record 2)
+            let relationship2 = new RelationshipEntity;
+            relationship2.userId = friendRequest.senderId;
+            relationship2.friendId = friendRequest.receiverId;
+            await this._relationshipRepos.create(relationship2);
 
             return res.return(ErrorMap.SUCCESSFUL.Code, friendRequest);
         } catch (error) {
