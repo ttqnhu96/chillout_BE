@@ -1,4 +1,4 @@
-import { Body, Controller, Inject, Logger, Param, Post, Put, UseGuards, UseInterceptors} from "@nestjs/common";
+import { Body, Controller, Delete, Inject, Logger, Param, Post, Put, UseGuards, UseInterceptors} from "@nestjs/common";
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { CONTROLLER_CONSTANTS, URL_CONSTANTS } from "../common/constants/api.constant";
 import { SERVICE_INTERFACE } from "../config/module.config";
@@ -46,5 +46,16 @@ export class FriendRequestController {
     public async acceptFriendRequest(@Param('id') id: number) {
         this._logger.log('========== Accept friend request ==========');
         return await this._friendRequestService.acceptFriendRequest(id);
+    }
+
+    @Delete(URL_CONSTANTS.DELETE)
+    @ApiOperation({ summary: 'Delete friend request' })
+    @ApiResponse({ status: 200, description: 'The result returned is the ResponseDto class', schema: {} })
+    @UseGuards(JwtAuthGuard)
+    @UseInterceptors(AuthUserInterceptor)
+    @ApiBearerAuth()
+    public async deleteFriendRequestById(@Param('id') id: number) {
+        this._logger.log('========== Delete friend request ==========');
+        return await this._friendRequestService.deleteFriendRequestById(id);
     }
 }

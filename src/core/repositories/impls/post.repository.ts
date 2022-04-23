@@ -24,7 +24,7 @@ export class PostRepository extends BaseRepository implements IPostRepository {
      */
     async getPostListNewsFeed(request: GetPostListNewsFeedRequest) {
         let params = [];
-        const sql = `SELECT p.id AS id, p.content AS content, p.privacy_setting_id AS privacySettingId, 
+        const sql = `SELECT p.id AS id, pro.id AS profileId, p.content AS content, p.privacy_setting_id AS privacySettingId, 
         (SELECT COUNT(plu.id) FROM post_liked_users plu WHERE plu.post_id = p.id AND plu.is_deleted = FALSE) AS likes, 
         p.user_id AS userId, p.created_at AS createdAt, p.updated_at AS updatedAt,
         (SELECT COUNT(c.id) FROM comment c WHERE c.post_id = p.id AND c.is_deleted = FALSE) AS totalComment,
@@ -35,9 +35,12 @@ export class PostRepository extends BaseRepository implements IPostRepository {
             LEFT JOIN Relationship r ON r.friend_id = u.id
         WHERE ( p.user_id = ? OR r.user_id = ? )
             AND p.is_deleted = FALSE
+            AND (CASE WHEN p.user_id = ? THEN p.privacy_setting_id IN ('${PRIVACY_SETTING.ONLY_ME}', '${PRIVACY_SETTING.PUBLIC}') 
+                ELSE p.privacy_setting_id = '${PRIVACY_SETTING.PUBLIC}' END)
         ORDER BY p.created_at DESC`;
         const sqlPagination = ` LIMIT ? OFFSET ?`;
 
+        params.push(request.userId);
         params.push(request.userId);
         params.push(request.userId);
         if(request.isPaginated) {
@@ -56,8 +59,8 @@ export class PostRepository extends BaseRepository implements IPostRepository {
      */
     async getPostListWall(currentUserId: number, request: GetPostListWallRequest) {
         let params = [];
-        const sql = `SELECT p.id AS id, pro.first_name AS firstName, pro.last_name AS lastName, p.content AS content, 
-        pro.avatar AS avatar, p.privacy_setting_id AS privacySettingId,
+        const sql = `SELECT p.id AS id, pro.id AS profileId, pro.first_name AS firstName, pro.last_name AS lastName, 
+        p.content AS content, pro.avatar AS avatar, p.privacy_setting_id AS privacySettingId,
         (SELECT COUNT(plu.id) FROM post_liked_users plu WHERE plu.post_id = p.id AND plu.is_deleted = FALSE) AS likes, 
         p.user_id AS userId, p.created_at AS createdAt, p.updated_at AS updatedAt, 
         (SELECT COUNT(c.id) FROM comment c WHERE c.post_id = p.id AND c.is_deleted = FALSE) AS totalComment

@@ -68,14 +68,7 @@ export class FriendRequestService extends BaseService implements IFriendRequestS
         const res = new ResponseDto();
         try {
             //get friend request list
-            const listFriendRequest = await this._friendRequestRepos.findByCondition(
-                {
-                    receiverId: request.receiverId,
-                    isAccepted: false,
-                    isDeleted: false
-                },
-                { createdAt: ORDER_BY.DESC });
-
+            const listFriendRequest = await this._friendRequestRepos.getReceivedFriendRequestList(request);
             return res.return(ErrorMap.SUCCESSFUL.Code, listFriendRequest);
         } catch (error) {
             this._logger.error(`${ErrorMap.E500.Code}: ${ErrorMap.E500.Message}`);
@@ -102,7 +95,7 @@ export class FriendRequestService extends BaseService implements IFriendRequestS
                 isDeleted: false
             });
             if (!friendRequest) {
-                return res.return(ErrorMap.E011.Code);
+                return res.return(ErrorMap.E014.Code);
             }
 
             //Save to Friend Request table
@@ -121,6 +114,39 @@ export class FriendRequestService extends BaseService implements IFriendRequestS
             relationship2.userId = friendRequest.senderId;
             relationship2.friendId = friendRequest.receiverId;
             await this._relationshipRepos.create(relationship2);
+
+            return res.return(ErrorMap.SUCCESSFUL.Code, friendRequest);
+        } catch (error) {
+            this._logger.error(`${ErrorMap.E500.Code}: ${ErrorMap.E500.Message}`);
+            this._logger.error(`${error.name}: ${error.message}`);
+            this._logger.error(`${error.stack}`);
+            return res.return(ErrorMap.E500.Code);
+        }
+    }
+
+    /**
+     * deleteFriendRequestById
+     * @param id
+     */
+    async deleteFriendRequestById(id: number): Promise<ResponseDto> {
+        this._logger.log("============== Delete friend request by id ==============");
+        const res = new ResponseDto();
+        try {
+            //Check comment existence
+            const currentUserId = await this._commonUtil.getUserId();
+            const friendRequest = await this._friendRequestRepos.findOne({
+                id: id,
+                receiverId: currentUserId,
+                isAccepted: false,
+                isDeleted: false
+            });
+            if (!friendRequest) {
+                return res.return(ErrorMap.E014.Code);
+            }
+
+            //Delete friend request
+            friendRequest.isDeleted = true;
+            await this._friendRequestRepos.update(friendRequest);
 
             return res.return(ErrorMap.SUCCESSFUL.Code, friendRequest);
         } catch (error) {

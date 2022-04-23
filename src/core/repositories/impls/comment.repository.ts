@@ -22,7 +22,7 @@ export class CommentRepository extends BaseRepository implements ICommentReposit
         let result = [];
         let params = [];
         const sqlSelect = `SELECT c.id AS id, c.content AS content, c.post_id AS postId, c.user_id AS userId, c.created_at AS createdAt, 
-        c.updated_at AS updatedAt, pro.first_name AS firstName, pro.last_name AS lastName, pro.avatar AS avatar`;
+        c.updated_at AS updatedAt, pro.id AS profileId, pro.first_name AS firstName, pro.last_name AS lastName, pro.avatar AS avatar`;
         let sqlCount: string = `SELECT COUNT(*) AS Total`;
         let sql: string = ` FROM Comment c
             INNER JOIN Post p ON p.id = c.post_id AND p.is_deleted = FALSE
