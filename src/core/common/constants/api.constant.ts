@@ -34,6 +34,7 @@ export const URL_CONSTANTS = {
     GET_COMMENT_LIST_BY_POST_ID: 'list',
     SEARCH: 'search',
     GET_SUGGESTIONS_LIST: 'list-suggestions',
+    GET_FRIEND_LIST: 'list-friends',
     GET_RECEIVED_FRIEND_REQUEST_LIST: 'list-received',
     ACCEPT_FRIEND_REQUEST: ':id',
 }

@@ -7,6 +7,8 @@ import { CommonUtil } from "../../utils/common.util";
 import { IRelationshipService } from "../irelationship.service";
 import { IRelationshipRepository } from "../../repositories/irelationship.repository";
 import { GetSuggestionsListRequest } from "../../dtos/requests/relationship/get-suggestions-list.request";
+import { GetFriendListRequest } from "../../dtos/requests/relationship/get-friend-list.request";
+import { GetRelationshipRequest } from "src/core/dtos/requests/relationship/get-relationship.request";
 
 @Injectable()
 export class RelationshipService extends BaseService implements IRelationshipService {
@@ -27,6 +29,42 @@ export class RelationshipService extends BaseService implements IRelationshipSer
         try {
             const suggestionList = await this._relationshipRepos.getSuggestionsList(request);
             return res.return(ErrorMap.SUCCESSFUL.Code, suggestionList);
+        } catch (error) {
+            this._logger.error(`${ErrorMap.E500.Code}: ${ErrorMap.E500.Message}`);
+            this._logger.error(`${error.name}: ${error.message}`);
+            this._logger.error(`${error.stack}`);
+            return res.return(ErrorMap.E500.Code);
+        }
+    }
+
+    /**
+    * getFriendList
+    * @param request
+    */
+    async getFriendList(request: GetFriendListRequest): Promise<ResponseDto> {
+        this._logger.log("============== Get friend list ==============");
+        const res = new ResponseDto();
+        try {
+            const friendList = await this._relationshipRepos.getFriendList(request);
+            return res.return(ErrorMap.SUCCESSFUL.Code, friendList);
+        } catch (error) {
+            this._logger.error(`${ErrorMap.E500.Code}: ${ErrorMap.E500.Message}`);
+            this._logger.error(`${error.name}: ${error.message}`);
+            this._logger.error(`${error.stack}`);
+            return res.return(ErrorMap.E500.Code);
+        }
+    }
+
+    /**
+    * getRelationship
+    * @param request
+    */
+     async getRelationship(request: GetRelationshipRequest): Promise<ResponseDto> {
+        this._logger.log("============== Get relationship ==============");
+        const res = new ResponseDto();
+        try {
+            //const friendList = await this._relationshipRepos.getFriendList(request);
+            return res.return(ErrorMap.SUCCESSFUL.Code, 'friendList');
         } catch (error) {
             this._logger.error(`${ErrorMap.E500.Code}: ${ErrorMap.E500.Message}`);
             this._logger.error(`${error.name}: ${error.message}`);

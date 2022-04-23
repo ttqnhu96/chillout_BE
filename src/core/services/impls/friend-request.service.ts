@@ -10,7 +10,7 @@ import { IFriendRequestService } from "../ifriend-request.service";
 import { CreateFriendRequestRequest } from "../../dtos/requests/friend-request/create-friend-request.request";
 import { IFriendRequestRepository } from "../../repositories/ifriend-request.repository";
 import { GetReceivedFriendRequestListRequest } from "../../dtos/requests/friend-request/get-received-friend-request-list.request";
-import { ORDER_BY } from "../../common/constants/common.constant";
+import { ORDER_BY, RELATIONSHIP_TYPE_ENUM } from "../../common/constants/common.constant";
 import { RelationshipEntity } from "src/core/entities/relationship.entity";
 import { IRelationshipRepository } from "src/core/repositories/irelationship.repository";
 
@@ -103,17 +103,37 @@ export class FriendRequestService extends BaseService implements IFriendRequestS
             friendRequest.isAccepted = true;
             await this._friendRequestRepos.update(friendRequest);
 
-            //Save to Relationship table (record 1)
-            let relationship1 = new RelationshipEntity;
-            relationship1.userId = friendRequest.receiverId;
-            relationship1.friendId = friendRequest.senderId;
-            await this._relationshipRepos.create(relationship1);
+            // //Check relationship existence
+            // const relationship1 = await this._relationshipRepos.findOne({
+            //     userId: friendRequest.receiverId,
+            //     friendId: friendRequest.senderId,
+            //     type: !RELATIONSHIP_TYPE_ENUM.FRIEND
+            // });
+            // const relationship2 = await this._relationshipRepos.findOne({
+            //     userId: friendRequest.senderId,
+            //     friendId: friendRequest.receiverId,
+            //     type: !RELATIONSHIP_TYPE_ENUM.FRIEND
+            // });
 
-            //Save to Relationship table (record 2)
-            let relationship2 = new RelationshipEntity;
-            relationship2.userId = friendRequest.senderId;
-            relationship2.friendId = friendRequest.receiverId;
-            await this._relationshipRepos.create(relationship2);
+            // //If relationship does not exist, create new
+            // if(!relationship1 && !relationship2) {
+            //     //Save to Relationship table (record 1)
+            //     let newRelationship1 = new RelationshipEntity;
+            //     newRelationship1.userId = friendRequest.receiverId;
+            //     newRelationship1.friendId = friendRequest.senderId;
+            //     newRelationship1.type = RELATIONSHIP_TYPE_ENUM.FRIEND;
+            //     await this._relationshipRepos.create(newRelationship1);
+
+            //     //Save to Relationship table (record 2)
+            //     let newRelationship2 = new RelationshipEntity;
+            //     newRelationship2.userId = friendRequest.senderId;
+            //     newRelationship2.friendId = friendRequest.receiverId;
+            //     newRelationship2.type = RELATIONSHIP_TYPE_ENUM.FRIEND;
+            //     await this._relationshipRepos.create(newRelationship2);
+            // }
+            
+
+            
 
             return res.return(ErrorMap.SUCCESSFUL.Code, friendRequest);
         } catch (error) {

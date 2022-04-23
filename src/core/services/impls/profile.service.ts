@@ -12,7 +12,8 @@ import { MAPPER_CONFIG } from "../../config/mapper.config";
 import { CommonUtil } from "../../utils/common.util";
 import { UpdateAvatarRequest } from "../../dtos/requests/profile/update-avatar.request";
 import { SearchRequest } from "../../dtos/requests/common/search.request";
-import { IRelationshipRepository } from "src/core/repositories/irelationship.repository";
+import { IRelationshipRepository } from "../../repositories/irelationship.repository";
+import { IFriendRequestRepository } from "../../repositories/ifriend-request.repository";
 
 @Injectable()
 export class ProfileService extends BaseService implements IProfileService {
@@ -20,7 +21,8 @@ export class ProfileService extends BaseService implements IProfileService {
     private _commonUtil: CommonUtil = new CommonUtil();
     constructor(@Inject(REPOSITORY_INTERFACE.IPROFILE_REPOSITORY) private _profileRepos: IProfileRepository,
         @Inject(REPOSITORY_INTERFACE.IUSER_REPOSITORY) private _userRepos: IUserRepository,
-        @Inject(REPOSITORY_INTERFACE.IRELATIONSHIP_REPOSITORY) private _relationshipRepos: IRelationshipRepository) {
+        @Inject(REPOSITORY_INTERFACE.IRELATIONSHIP_REPOSITORY) private _relationshipRepos: IRelationshipRepository,
+        @Inject(REPOSITORY_INTERFACE.IFRIEND_REQUEST_REPOSITORY) private _friendRequestRepos: IFriendRequestRepository) {
         super(_profileRepos);
         this._logger.log("============== Constructor ProfileService ==============");
     }
@@ -56,20 +58,34 @@ export class ProfileService extends BaseService implements IProfileService {
         this._logger.log("============== Get profile detail by id ==============");
         const res = new ResponseDto();
         try {
-            // Check profile existence
+            // Get profile detail
             const profile = await this._profileRepos.getProfileDetailById(id);
             if (!profile) {
                 return res.return(ErrorMap.E007.Code);
             }
-            console.log(profile[0])
+            // Get user ids in friend list
             const friendList = await this._relationshipRepos.getFriendList({
                 userId: profile[0].userId,
                 isPaginated: false,
                 pageIndex: 0,
                 pageSize: 0
             })
+            const friendListUserId = friendList?.map(item => { return item.userId })
             let result = profile[0];
-            result['friendList'] = friendList;
+            result['friendListUserId'] = friendListUserId;
+
+            // // Get sender ids in received request list
+            // const receivedRequestList = await this._friendRequestRepos.getReceivedFriendRequestList({
+            //     receiverId: profile[0].userId,
+            //     isPaginated: false,
+            //     pageIndex: 0,
+            //     pageSize: 0
+            // })
+            // const requestSenderId = receivedRequestList?.map(item => { return item.senderId })
+            // let result = profile[0];
+            // result['friendListUserId'] = friendListUserId;
+
+            // // Get receiver ids in sent request list
 
             return res.return(ErrorMap.SUCCESSFUL.Code, result);
         } catch (error) {

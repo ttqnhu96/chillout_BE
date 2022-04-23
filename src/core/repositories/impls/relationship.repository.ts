@@ -6,6 +6,7 @@ import { ObjectLiteral, Repository } from "typeorm";
 import { IRelationshipRepository } from "../irelationship.repository";
 import { GetSuggestionsListRequest } from "../../dtos/requests/relationship/get-suggestions-list.request";
 import { GetFriendListRequest } from "src/core/dtos/requests/relationship/get-friend-list.request";
+import { GetRelationshipRequest } from "src/core/dtos/requests/relationship/get-relationship.request";
 
 @Injectable()
 export class RelationshipRepository extends BaseRepository implements IRelationshipRepository {
@@ -31,7 +32,7 @@ export class RelationshipRepository extends BaseRepository implements IRelations
 
         params.push(request.userId);
         params.push(request.userId);
-        if(request.isPaginated) {
+        if (request.isPaginated) {
             params.push(request.pageSize);
             params.push(request.pageIndex * request.pageSize);
             return await this.repos.query(sql + sqlPagination, params);
@@ -45,7 +46,6 @@ export class RelationshipRepository extends BaseRepository implements IRelations
      * @param request
      */
     async getFriendList(request: GetFriendListRequest) {
-        console.log(request)
         let params = [];
         const sql = `SELECT u.id AS userId, u.username AS username, pro.id AS profileId, 
         pro.first_name AS firstName, pro.last_name AS lastName, pro.avatar AS avatar
@@ -57,7 +57,7 @@ export class RelationshipRepository extends BaseRepository implements IRelations
         const sqlPagination = ` LIMIT ? OFFSET ?`;
 
         params.push(request.userId);
-        if(request.isPaginated) {
+        if (request.isPaginated) {
             params.push(request.pageSize);
             params.push(request.pageIndex * request.pageSize);
             return await this.repos.query(sql + sqlPagination, params);
