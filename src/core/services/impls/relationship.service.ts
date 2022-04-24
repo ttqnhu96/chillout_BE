@@ -56,15 +56,21 @@ export class RelationshipService extends BaseService implements IRelationshipSer
     }
 
     /**
-    * getRelationship
+    * getRelationshipWithCurrentUser
     * @param request
     */
-     async getRelationship(request: GetRelationshipRequest): Promise<ResponseDto> {
-        this._logger.log("============== Get relationship ==============");
+    async getRelationshipWithCurrentUser(request: GetRelationshipRequest): Promise<ResponseDto> {
+        this._logger.log("============== Get relationship with current user ==============");
         const res = new ResponseDto();
         try {
-            //const friendList = await this._relationshipRepos.getFriendList(request);
-            return res.return(ErrorMap.SUCCESSFUL.Code, 'friendList');
+            //Get relationship of friend with current user
+            const currentUserId = await this._commonUtil.getUserId();
+            const relationship = await this._relationshipRepos.findOne({
+                userId: request.userId,
+                friendId: currentUserId,
+                isDeleted: false
+            });
+            return res.return(ErrorMap.SUCCESSFUL.Code, relationship);
         } catch (error) {
             this._logger.error(`${ErrorMap.E500.Code}: ${ErrorMap.E500.Message}`);
             this._logger.error(`${error.name}: ${error.message}`);

@@ -48,8 +48,26 @@ export class FriendRequestService extends BaseService implements IFriendRequestS
             dataMapper.senderId = currentUserId;
             dataMapper.isAccepted = false;
             dataMapper.isDeleted = false;
-
             const friendRequest = await this._friendRequestRepos.create(dataMapper);
+
+            //Save to Relationship table (record 1)
+            let newRelationship1 = new RelationshipEntity;
+            newRelationship1.userId = friendRequest.senderId;
+            newRelationship1.friendId = friendRequest.receiverId;
+            newRelationship1.type = RELATIONSHIP_TYPE_ENUM.FRIEND_REQUEST_SENDER; //Role of current user
+            newRelationship1.friendRequestId = friendRequest.id;
+            newRelationship1.isDeleted = false;
+            await this._relationshipRepos.create(newRelationship1);
+
+            //Save to Relationship table (record 2)
+            let newRelationship2 = new RelationshipEntity;
+            newRelationship2.userId = friendRequest.receiverId;
+            newRelationship2.friendId = friendRequest.senderId;
+            newRelationship2.type = RELATIONSHIP_TYPE_ENUM.FRIEND_REQUEST_RECEIVER; //Role of current user
+            newRelationship2.friendRequestId = friendRequest.id;
+            newRelationship2.isDeleted = false;
+            await this._relationshipRepos.create(newRelationship2);
+
             return res.return(ErrorMap.SUCCESSFUL.Code, friendRequest);
         } catch (error) {
             this._logger.error(`${ErrorMap.E500.Code}: ${ErrorMap.E500.Message}`);
@@ -103,37 +121,28 @@ export class FriendRequestService extends BaseService implements IFriendRequestS
             friendRequest.isAccepted = true;
             await this._friendRequestRepos.update(friendRequest);
 
-            // //Check relationship existence
-            // const relationship1 = await this._relationshipRepos.findOne({
-            //     userId: friendRequest.receiverId,
-            //     friendId: friendRequest.senderId,
-            //     type: !RELATIONSHIP_TYPE_ENUM.FRIEND
-            // });
-            // const relationship2 = await this._relationshipRepos.findOne({
-            //     userId: friendRequest.senderId,
-            //     friendId: friendRequest.receiverId,
-            //     type: !RELATIONSHIP_TYPE_ENUM.FRIEND
-            // });
+            //Check relationship existence
+            const relationship1 = await this._relationshipRepos.findOne({
+                userId: friendRequest.receiverId,
+                friendId: friendRequest.senderId,
+                isDeleted: false
+            });
+            const relationship2 = await this._relationshipRepos.findOne({
+                userId: friendRequest.senderId,
+                friendId: friendRequest.receiverId,
+                isDeleted: false
+            });
 
-            // //If relationship does not exist, create new
-            // if(!relationship1 && !relationship2) {
-            //     //Save to Relationship table (record 1)
-            //     let newRelationship1 = new RelationshipEntity;
-            //     newRelationship1.userId = friendRequest.receiverId;
-            //     newRelationship1.friendId = friendRequest.senderId;
-            //     newRelationship1.type = RELATIONSHIP_TYPE_ENUM.FRIEND;
-            //     await this._relationshipRepos.create(newRelationship1);
+            //Update relationship type to "FRIEND"
+            if (relationship1) {
+                relationship1.type = RELATIONSHIP_TYPE_ENUM.FRIEND;
+            }
+            await this._relationshipRepos.update(relationship1);
 
-            //     //Save to Relationship table (record 2)
-            //     let newRelationship2 = new RelationshipEntity;
-            //     newRelationship2.userId = friendRequest.senderId;
-            //     newRelationship2.friendId = friendRequest.receiverId;
-            //     newRelationship2.type = RELATIONSHIP_TYPE_ENUM.FRIEND;
-            //     await this._relationshipRepos.create(newRelationship2);
-            // }
-            
-
-            
+            if (relationship2) {
+                relationship2.type = RELATIONSHIP_TYPE_ENUM.FRIEND;
+            }
+            await this._relationshipRepos.update(relationship2);
 
             return res.return(ErrorMap.SUCCESSFUL.Code, friendRequest);
         } catch (error) {
@@ -156,17 +165,40 @@ export class FriendRequestService extends BaseService implements IFriendRequestS
             const currentUserId = await this._commonUtil.getUserId();
             const friendRequest = await this._friendRequestRepos.findOne({
                 id: id,
-                receiverId: currentUserId,
                 isAccepted: false,
                 isDeleted: false
             });
             if (!friendRequest) {
                 return res.return(ErrorMap.E014.Code);
             }
+            if(friendRequest.receiverId !== currentUserId && friendRequest.senderId !== currentUserId) {
+                return res.return(ErrorMap.E014.Code);
+            }
 
             //Delete friend request
             friendRequest.isDeleted = true;
             await this._friendRequestRepos.update(friendRequest);
+
+            //Check relationship existence
+            const relationship1 = await this._relationshipRepos.findOne({
+                userId: friendRequest.receiverId,
+                friendId: friendRequest.senderId,
+                isDeleted: false
+            });
+            const relationship2 = await this._relationshipRepos.findOne({
+                userId: friendRequest.senderId,
+                friendId: friendRequest.receiverId,
+                isDeleted: false
+            });
+            //Delete record in relationship table
+            if (relationship1) {
+                relationship1.isDeleted = true;
+                await this._relationshipRepos.update(relationship1);
+            }
+            if (relationship2) {
+                relationship2.isDeleted = true;
+                await this._relationshipRepos.update(relationship2);
+            }
 
             return res.return(ErrorMap.SUCCESSFUL.Code, friendRequest);
         } catch (error) {

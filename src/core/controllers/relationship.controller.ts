@@ -1,4 +1,4 @@
-import { Body, Controller, Inject, Logger, Post, UseGuards, UseInterceptors} from "@nestjs/common";
+import { Body, Controller, Inject, Logger, Post, UseGuards, UseInterceptors } from "@nestjs/common";
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { CONTROLLER_CONSTANTS, URL_CONSTANTS } from "../common/constants/api.constant";
 import { SERVICE_INTERFACE } from "../config/module.config";
@@ -7,6 +7,7 @@ import { AuthUserInterceptor } from "../../interceptors/auth-user-interceptor.se
 import { IRelationshipService } from "../services/irelationship.service";
 import { GetSuggestionsListRequest } from "../dtos/requests/relationship/get-suggestions-list.request";
 import { GetFriendListRequest } from "../dtos/requests/relationship/get-friend-list.request";
+import { GetRelationshipRequest } from "../dtos/requests/relationship/get-relationship.request";
 
 @Controller(CONTROLLER_CONSTANTS.RELATIONSHIP)
 @ApiTags(CONTROLLER_CONSTANTS.RELATIONSHIP)
@@ -35,5 +36,16 @@ export class RelationshipController {
     public async getFriendList(@Body() request: GetFriendListRequest) {
         this._logger.log('========== Get friend list ==========');
         return await this._relationshipService.getFriendList(request);
+    }
+
+    @Post(URL_CONSTANTS.GET_RELATIONSHIP_WITH_CURRENT_USER)
+    @ApiOperation({ summary: 'Get relationship with current user' })
+    @ApiResponse({ status: 200, description: 'The result returned is the ResponseDto class', schema: {} })
+    @UseGuards(JwtAuthGuard)
+    @UseInterceptors(AuthUserInterceptor)
+    @ApiBearerAuth()
+    public async getRelationshipWithCurrentUser(@Body() request: GetRelationshipRequest) {
+        this._logger.log('========== Get relationship with current user ==========');
+        return await this._relationshipService.getRelationshipWithCurrentUser(request);
     }
 }

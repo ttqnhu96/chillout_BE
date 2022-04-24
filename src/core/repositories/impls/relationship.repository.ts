@@ -7,6 +7,7 @@ import { IRelationshipRepository } from "../irelationship.repository";
 import { GetSuggestionsListRequest } from "../../dtos/requests/relationship/get-suggestions-list.request";
 import { GetFriendListRequest } from "src/core/dtos/requests/relationship/get-friend-list.request";
 import { GetRelationshipRequest } from "src/core/dtos/requests/relationship/get-relationship.request";
+import { RELATIONSHIP_TYPE_ENUM } from "src/core/common/constants/common.constant";
 
 @Injectable()
 export class RelationshipRepository extends BaseRepository implements IRelationshipRepository {
@@ -26,7 +27,8 @@ export class RelationshipRepository extends BaseRepository implements IRelations
         pro.first_name AS firstName, pro.last_name AS lastName, pro.avatar AS avatar
         FROM user u 
             INNER JOIN profile pro ON pro.id = u.profile_id 
-        WHERE u.id != ? AND u.Id NOT IN (SELECT r.friend_id FROM relationship r WHERE r.user_id = ?)
+        WHERE u.id != ? AND u.Id NOT IN (SELECT r.friend_id FROM relationship r WHERE r.user_id = ? 
+            AND r.type = '${RELATIONSHIP_TYPE_ENUM.FRIEND}' AND r.is_deleted = FALSE)
         ORDER BY pro.first_name ASC`;
         const sqlPagination = ` LIMIT ? OFFSET ?`;
 
@@ -52,7 +54,8 @@ export class RelationshipRepository extends BaseRepository implements IRelations
         FROM user u 
             INNER JOIN profile pro ON pro.id = u.profile_id 
         WHERE u.Id IN 
-            (SELECT r.friend_id FROM relationship r WHERE r.user_id = ?)
+            (SELECT r.friend_id FROM relationship r WHERE r.user_id = ? 
+                AND r.type = '${RELATIONSHIP_TYPE_ENUM.FRIEND}' AND r.is_deleted = FALSE)
         ORDER BY pro.first_name ASC`;
         const sqlPagination = ` LIMIT ? OFFSET ?`;
 

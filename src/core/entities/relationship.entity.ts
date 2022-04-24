@@ -16,4 +16,10 @@ export class RelationshipEntity extends BaseEntityAutoId {
         name: 'type'
     })
     type: RELATIONSHIP_TYPE_ENUM;
+
+    @Column({ name: 'is_deleted' })
+    isDeleted: boolean;
+
+    @Column({ name: 'friend_request_id' })
+    friendRequestId: number;
 }
