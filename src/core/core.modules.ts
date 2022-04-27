@@ -17,7 +17,7 @@ import { UserService } from "./services/impls/user.service";
 import { UserRepository } from "./repositories/impls/user.repository";
 import { UserController } from "./controllers/user.controller";
 import { ProfileController } from "./controllers/profile.controller";
-import { JwtModule } from '@nestjs/jwt';
+import { JwtModule, JwtService } from '@nestjs/jwt';
 import { ENV_CONFIG } from "../shared/services/config.service";
 import { ProfileRepository } from "./repositories/impls/profile.repository";
 import { ProfileService } from "./services/impls/profile.service";
@@ -36,6 +36,8 @@ import { CommentRepository } from "./repositories/impls/comment.repository";
 import { PostLikedUsersRepository } from "./repositories/impls/post-liked-users.repository";
 import { CommonController } from "./controllers/common.controller";
 import { CommonService } from "./services/impls/common.service";
+import { AppGateway } from "src/gatewaies/app.gateway";
+import { DeviceRepository } from "./repositories/impls/device.repository";
 import { RelationshipRepository } from "./repositories/impls/relationship.repository";
 import { RelationshipService } from "./services/impls/relationship.service";
 import { RelationshipController } from "./controllers/relationship.controller";
@@ -70,21 +72,23 @@ const entities = [
     ENTITIES_CONFIG.PHOTO,
     ENTITIES_CONFIG.COMMENT,
     ENTITIES_CONFIG.POST_LIKED_USERS,
+    ENTITIES_CONFIG.DEVICE,
     ENTITIES_CONFIG.RELATIONSHIP,
     ENTITIES_CONFIG.FRIEND_REQUEST
 ]
 
 const providers = [
-    S3UploadFileUtil
+    S3UploadFileUtil,
+    AppGateway
 ]
 
 @Global()
 @Module({
     imports: [TypeOrmModule.forFeature([...entities]),
-        JwtModule.register({
-            secret: ENV_CONFIG.JWT_SECRET_KEY,
-            signOptions: { expiresIn: ENV_CONFIG.EXPIRES_TIME },
-        }),
+    JwtModule.register({
+        secret: ENV_CONFIG.JWT_SECRET_KEY,
+        signOptions: { expiresIn: ENV_CONFIG.EXPIRES_TIME },
+    }),
     ],
     controllers: [...controllers],
     providers: [
@@ -128,6 +132,10 @@ const providers = [
         {
             provide: REPOSITORY_INTERFACE.IPOST_LIKED_USERS_REPOSITORY,
             useClass: PostLikedUsersRepository
+        },
+        {
+            provide: REPOSITORY_INTERFACE.IDEVICE_REPOSITORY,
+            useClass: DeviceRepository
         },
         {
             provide: REPOSITORY_INTERFACE.IRELATIONSHIP_REPOSITORY,

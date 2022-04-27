@@ -14,6 +14,7 @@ import { CreateWorkplaceRequest } from "../dtos/requests/workplace/create-workpl
 import { CityEntity } from "../entities/city.entity";
 import { CollegeEntity } from "../entities/college.entity";
 import { CommentEntity } from "../entities/comment.entity";
+import { DeviceEntity } from "../entities/device.entity";
 import { FriendRequestEntity } from "../entities/friend-request.entity";
 import { PhotoEntity } from "../entities/photo.entity";
 import { PostLikedUsersEntity } from "../entities/post-liked-users.entity";
@@ -35,6 +36,7 @@ export const ENTITIES_CONFIG = {
     PHOTO: PhotoEntity,
     COMMENT: CommentEntity,
     POST_LIKED_USERS: PostLikedUsersEntity,
+    DEVICE: DeviceEntity,
     RELATIONSHIP: RelationshipEntity,
     FRIEND_REQUEST: FriendRequestEntity
 }
@@ -66,6 +68,7 @@ export const REPOSITORY_INTERFACE = {
     IPHOTO_REPOSITORY: 'IPhotoRepository',
     ICOMMENT_REPOSITORY: 'ICommentRepository',
     IPOST_LIKED_USERS_REPOSITORY: 'IPostLikedUsersRepository',
+    IDEVICE_REPOSITORY: 'IDeviceRepository',
     IRELATIONSHIP_REPOSITORY: 'IRelationshipRepository',
     IFRIEND_REQUEST_REPOSITORY: 'IFriendRequestRepository'
 }
@@ -87,17 +90,17 @@ export const REQUEST_CONFIG = {
 }
 
 export module MODULE_REQUEST {
-    export abstract class CreateUserAbstractRequest extends REQUEST_CONFIG.CREATE_USER_REQUEST{}
-    export abstract class UpdateProfileAbstractRequest extends REQUEST_CONFIG.UPDATE_PROFILE_REQUEST{}
-    export abstract class UpdateUserLanguageAbstractRequest extends REQUEST_CONFIG.UPDATE_USER_LANGUAGE_REQUEST{}
-    export abstract class CreatePostAbstractRequest extends REQUEST_CONFIG.CREATE_POST_REQUEST{}
-    export abstract class UpdatePostAbstractRequest extends REQUEST_CONFIG.UPDATE_POST_REQUEST{}
-    export abstract class UpdateAvatarAbstractRequest extends REQUEST_CONFIG.UPDATE_AVATAR_REQUEST{}
-    export abstract class CreateCommentAbstractRequest extends REQUEST_CONFIG.CREATE_COMMENT_REQUEST{}
-    export abstract class UpdateCommentAbstractRequest extends REQUEST_CONFIG.UPDATE_COMMENT_REQUEST{}
-    export abstract class CreateCityAbstractRequest extends REQUEST_CONFIG.CREATE_CITY_REQUEST{}
-    export abstract class CreateCollegeAbstractRequest extends REQUEST_CONFIG.CREATE_COLLEGE_REQUEST{}
-    export abstract class CreateSchoolAbstractRequest extends REQUEST_CONFIG.CREATE_SCHOOL_REQUEST{}
-    export abstract class CreateWorkplaceAbstractRequest extends REQUEST_CONFIG.CREATE_WORKPLACE_REQUEST{}
-    export abstract class CreateFriendRequestAbstractRequest extends REQUEST_CONFIG.CREATE_FRIEND_REQUEST_REQUEST{}
+    export abstract class CreateUserAbstractRequest extends REQUEST_CONFIG.CREATE_USER_REQUEST { }
+    export abstract class UpdateProfileAbstractRequest extends REQUEST_CONFIG.UPDATE_PROFILE_REQUEST { }
+    export abstract class UpdateUserLanguageAbstractRequest extends REQUEST_CONFIG.UPDATE_USER_LANGUAGE_REQUEST { }
+    export abstract class CreatePostAbstractRequest extends REQUEST_CONFIG.CREATE_POST_REQUEST { }
+    export abstract class UpdatePostAbstractRequest extends REQUEST_CONFIG.UPDATE_POST_REQUEST { }
+    export abstract class UpdateAvatarAbstractRequest extends REQUEST_CONFIG.UPDATE_AVATAR_REQUEST { }
+    export abstract class CreateCommentAbstractRequest extends REQUEST_CONFIG.CREATE_COMMENT_REQUEST { }
+    export abstract class UpdateCommentAbstractRequest extends REQUEST_CONFIG.UPDATE_COMMENT_REQUEST { }
+    export abstract class CreateCityAbstractRequest extends REQUEST_CONFIG.CREATE_CITY_REQUEST { }
+    export abstract class CreateCollegeAbstractRequest extends REQUEST_CONFIG.CREATE_COLLEGE_REQUEST { }
+    export abstract class CreateSchoolAbstractRequest extends REQUEST_CONFIG.CREATE_SCHOOL_REQUEST { }
+    export abstract class CreateWorkplaceAbstractRequest extends REQUEST_CONFIG.CREATE_WORKPLACE_REQUEST { }
+    export abstract class CreateFriendRequestAbstractRequest extends REQUEST_CONFIG.CREATE_FRIEND_REQUEST_REQUEST { }
 }

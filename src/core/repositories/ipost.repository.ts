@@ -29,4 +29,6 @@ export interface IPostRepository extends IBaseRepository {
      * @param request 
      */
     searchPost(request: SearchRequest);
+
+    getTotalLikeByPostId(postId: number);
 }

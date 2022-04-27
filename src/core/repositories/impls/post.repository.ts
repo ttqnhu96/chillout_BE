@@ -43,7 +43,7 @@ export class PostRepository extends BaseRepository implements IPostRepository {
         params.push(request.userId);
         params.push(request.userId);
         params.push(request.userId);
-        if(request.isPaginated) {
+        if (request.isPaginated) {
             params.push(request.pageSize);
             params.push(request.pageIndex * request.pageSize);
             return await this.repos.query(sql + sqlPagination, params);
@@ -75,7 +75,7 @@ export class PostRepository extends BaseRepository implements IPostRepository {
 
         params.push(request.userId);
         params.push(currentUserId);
-        if(request.isPaginated) {
+        if (request.isPaginated) {
             params.push(request.pageSize);
             params.push(request.pageIndex * request.pageSize);
             return await this.repos.query(sql + sqlPagination, params);
@@ -84,13 +84,22 @@ export class PostRepository extends BaseRepository implements IPostRepository {
         }
     }
 
+    async getTotalLikeByPostId(postId: number) {
+        let params = [];
+        const sql = `SELECT COUNT(plu.id) AS totalLike
+        FROM post_liked_users plu 
+        INNER JOIN Post p ON p.id = plu.post_id 
+                WHERE p.id = ${postId} AND p.is_deleted = FALSE AND plu.is_deleted = FALSE`;
+        return await this.repos.query(sql, params);
+    }
+
     /**
      * getListUsersLikePost
      * @param request
      */
     async getListUsersLikePost(request: GetListUsersLikePostRequest) {
         let params = [];
-        const sql = `SELECT pro.avatar AS avatar, pro.first_name AS firstName, pro.last_name AS lastName
+        const sql = `SELECT u.id AS userId, pro.avatar AS avatar, pro.first_name AS firstName, pro.last_name AS lastName
         FROM post_liked_users plu
             INNER JOIN post p ON p.id = plu.post_id AND p.is_deleted = FALSE
             INNER JOIN user u ON u.id = plu.user_id AND u.user_status = '${USER_STATUS_ENUM.ACTIVE}'
