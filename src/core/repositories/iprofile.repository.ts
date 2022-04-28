@@ -3,14 +3,14 @@ import { IBaseRepository } from "./ibase.repository";
 
 export interface IProfileRepository extends IBaseRepository {
     /**
-     * getProfileDetailById
-     * @param id
+     * getProfileDetailByUserId
+     * @param userId
      */
-    getProfileDetailById(id: number);
+    getProfileDetailByUserId(userId: number);
 
     /**
      * searchProfile
-     * @param request 
+     * @param request
      */
     searchProfile(request: SearchRequest);
 }

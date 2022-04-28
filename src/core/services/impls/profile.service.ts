@@ -51,15 +51,15 @@ export class ProfileService extends BaseService implements IProfileService {
     }
 
     /**
-     * getProfileDetailById
-     * @param id
+     * getProfileDetailByUserId
+     * @param userId
      */
-    async getProfileDetailById(id: number): Promise<ResponseDto> {
-        this._logger.log("============== Get profile detail by id ==============");
+    async getProfileDetailByUserId(userId: number): Promise<ResponseDto> {
+        this._logger.log("============== Get profile detail by user id ==============");
         const res = new ResponseDto();
         try {
             // Get profile detail
-            const profile = await this._profileRepos.getProfileDetailById(id);
+            const profile = await this._profileRepos.getProfileDetailByUserId(userId);
             if (!profile) {
                 return res.return(ErrorMap.E007.Code);
             }

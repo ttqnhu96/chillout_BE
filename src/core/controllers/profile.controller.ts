@@ -28,14 +28,14 @@ export class ProfileController {
     }
     
     @Get(URL_CONSTANTS.GET_DETAIL)
-    @ApiOperation({ summary: 'Get profile detail by id' })
+    @ApiOperation({ summary: 'Get profile detail by user id' })
     @ApiResponse({ status: 200, description: 'The result returned is the ResponseDto class', schema: {} })
     @UseGuards(JwtAuthGuard)
     @UseInterceptors(AuthUserInterceptor)
     @ApiBearerAuth()
-    public async getProfileDetailById(@Param('id') id: number) {
-        this._logger.log('========== Get profile detail by id ==========');
-        return await this._profileService.getProfileDetailById(id);
+    public async getProfileDetailByUserId(@Param('userId') userId: number) {
+        this._logger.log('========== Get profile detail by user id ==========');
+        return await this._profileService.getProfileDetailByUserId(userId);
     }
     
     @Put(URL_CONSTANTS.UPDATE)

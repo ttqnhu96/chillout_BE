@@ -20,10 +20,10 @@ export class ProfileRepository extends BaseRepository implements IProfileReposit
     _nationalPhone: string;
 
     /**
-     * getProfileDetailById
-     * @param id
+     * getProfileDetailByUserId
+     * @param userId
      */
-    async getProfileDetailById(id: number) {
+    async getProfileDetailByUserId(userId: number) {
         const sql = `SELECT p.Id AS id, p.first_name AS firstName, p.last_name AS lastName, p.gender AS gender, p.birthday AS birthday,
             p.avatar AS avatar, 
             SUBSTR(p.phone, 
@@ -35,8 +35,8 @@ export class ProfileRepository extends BaseRepository implements IProfileReposit
             p.workplace_id AS workplaceId, IFNULL((SELECT name FROM workplace WHERE Id = p.workplace_id),'') AS workplaceName,
             p.created_at AS createdAt, (SELECT u.Id FROM user u WHERE u.profile_id = p.Id) AS userId
         FROM Profile p
-        WHERE p.Id = ?`;
-        return await this.repos.query(sql, [id]);
+        WHERE p.Id = (SELECT u.profile_id FROM User u WHERE u.Id = ?)`;
+        return await this.repos.query(sql, [userId]);
     }
 
     /**

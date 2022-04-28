@@ -38,7 +38,4 @@ export class ProfileEntity extends BaseEntityAutoId {
 
     @Column({ name: 'workplace_id' })
     workplaceId: number;
-
-    @Column({ name: 'relationship_id' })
-    relationshipId: number;
 }

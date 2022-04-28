@@ -18,10 +18,10 @@ export interface IProfileService extends IBaseService {
     getProfileById(id: number): Promise<ResponseDto>;
 
     /**
-     * getProfileDetailById
-     * @param id
+     * getProfileDetailByUserId
+     * @param userId
      */
-    getProfileDetailById(id: number): Promise<ResponseDto>;
+    getProfileDetailByUserId(userId: number): Promise<ResponseDto>;
 
     /**
      * updateProfile

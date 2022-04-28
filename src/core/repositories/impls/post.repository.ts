@@ -7,7 +7,7 @@ import { IPostRepository } from "../ipost.repository";
 import { GetPostListNewsFeedRequest } from "../../dtos/requests/post/get-post-list-news-feed.request";
 import { GetPostListWallRequest } from "../../dtos/requests/post/get-post-list-wall.request";
 import { GetListUsersLikePostRequest } from "../../dtos/requests/post/get-list-users-like-post.request";
-import { COMMON_CONSTANTS, PRIVACY_SETTING, USER_STATUS_ENUM } from "../../common/constants/common.constant";
+import { COMMON_CONSTANTS, PRIVACY_SETTING, USER_STATUS_ENUM, RELATIONSHIP_TYPE_ENUM } from "../../common/constants/common.constant";
 import { SearchRequest } from "../../dtos/requests/common/search.request";
 
 @Injectable()
@@ -32,11 +32,12 @@ export class PostRepository extends BaseRepository implements IPostRepository {
         FROM Post p
             INNER JOIN User u ON u.id = p.user_id
             INNER JOIN Profile pro ON pro.id = u.profile_id
-            LEFT JOIN Relationship r ON r.friend_id = u.id
+            LEFT JOIN Relationship r ON r.friend_id = u.id AND r.type = '${RELATIONSHIP_TYPE_ENUM.FRIEND}' AND r.is_deleted = FALSE
         WHERE ( p.user_id = ? OR r.user_id = ? )
             AND p.is_deleted = FALSE
             AND (CASE WHEN p.user_id = ? THEN p.privacy_setting_id IN ('${PRIVACY_SETTING.ONLY_ME}', '${PRIVACY_SETTING.PUBLIC}') 
                 ELSE p.privacy_setting_id = '${PRIVACY_SETTING.PUBLIC}' END)
+        GROUP BY p.Id
         ORDER BY p.created_at DESC`;
         const sqlPagination = ` LIMIT ? OFFSET ?`;
 

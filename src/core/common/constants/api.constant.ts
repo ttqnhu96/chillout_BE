@@ -20,7 +20,7 @@ export const URL_CONSTANTS = {
     GET_BY_USERNAME: ':username',
     GET_BY_ID: ':id',
     DELETE: ':id',
-    GET_DETAIL: 'detail/:id',
+    GET_DETAIL: 'detail/:userId',
     UPDATE: ':id',
     UPDATE_LANGUAGE: 'update/language',
     UPDATE_LIKES: 'update/likes',
