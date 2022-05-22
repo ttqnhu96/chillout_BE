@@ -12,7 +12,8 @@ export const CONTROLLER_CONSTANTS = {
     UPLOAD_FILE: 'upload-file',
     COMMENT: 'comment',
     RELATIONSHIP: 'relationship',
-    FRIEND_REQUEST: 'friend-request'
+    FRIEND_REQUEST: 'friend-request',
+    NOTIFICATION: 'notification'
 }
 
 export const URL_CONSTANTS = {
@@ -38,4 +39,5 @@ export const URL_CONSTANTS = {
     GET_RECEIVED_FRIEND_REQUEST_LIST: 'list-received',
     ACCEPT_FRIEND_REQUEST: ':id',
     GET_RELATIONSHIP_WITH_CURRENT_USER: 'get-relationship-with-current-user',
+    GET_NOTIFICATION_LIST_BY_RECEIVER_ID: 'list',
 }

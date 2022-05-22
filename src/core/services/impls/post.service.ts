@@ -161,10 +161,12 @@ export class PostService extends BaseService implements IPostService {
                 newPostLikedUser.userId = currentUserId;
                 newPostLikedUser.isDeleted = false;
                 await this._postLikedUsersRepos.create(newPostLikedUser);
+                post['isLikeAction'] = true; //false is "unlike"
             } else {
                 //Update record if post_liked_users already exists
                 postLikedUser.isDeleted = !postLikedUser.isDeleted;
                 await this._postLikedUsersRepos.update(postLikedUser);
+                post['isLikeAction'] = !postLikedUser.isDeleted; //isDeleted = false is "unlike"
             }
 
             return res.return(ErrorMap.SUCCESSFUL.Code, post);

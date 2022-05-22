@@ -2,6 +2,7 @@ import { CityEntity } from "../entities/city.entity";
 import { CollegeEntity } from "../entities/college.entity";
 import { CommentEntity } from "../entities/comment.entity";
 import { FriendRequestEntity } from "../entities/friend-request.entity";
+import { NotificationEntity } from "../entities/notification.entity";
 import { PostEntity } from "../entities/post.entity";
 import { ProfileEntity } from "../entities/profile.entity";
 import { SchoolEntity } from "../entities/school.entity";
@@ -52,5 +53,8 @@ export const MAPPER_CONFIG = {
 
     CREATE_FRIEND_REQUEST_MAPPING: AutoMapperUtil.createMap().mapProperties((s: FriendRequestEntity) => [s.receiverId])
         .fromProperties((s: MODULE_REQUEST.CreateFriendRequestAbstractRequest) => [s.receiverId]),
+
+    CREATE_NOTIFICATION_MAPPING: AutoMapperUtil.createMap().mapProperties((s: NotificationEntity) => [s.executorId, s.receiverId, s.action, s.objectType, s.objectId, s.message])
+        .fromProperties((s: MODULE_REQUEST.CreateNotificationAbstractRequest) => [s.executorId, s.receiverId, s.action, s.objectType, s.objectId, s.message]),
 
 }

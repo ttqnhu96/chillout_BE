@@ -40,6 +40,9 @@ export class CommentService extends BaseService implements ICommentService {
             dataMapper.isDeleted = false;
             const comment = await this._commentRepos.create(dataMapper);
 
+            const post = await this._postRepos.findOne(comment.postId);
+            comment['postAuthorId'] = post.userId;
+
             return res.return(ErrorMap.SUCCESSFUL.Code, comment);
         } catch (error) {
             this._logger.error(`${ErrorMap.E500.Code}: ${ErrorMap.E500.Message}`);

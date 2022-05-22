@@ -44,6 +44,9 @@ import { RelationshipController } from "./controllers/relationship.controller";
 import { FriendRequestController } from "./controllers/friend-request.controller";
 import { FriendRequestRepository } from "./repositories/impls/friend-request.repository";
 import { FriendRequestService } from "./services/impls/friend-request.service";
+import { NotificationController } from "./controllers/notification.controller";
+import { NotificationService } from "./services/impls/notification.service";
+import { NotificationRepository } from "./repositories/impls/notification.repository";
 
 const controllers = [
     UserController,
@@ -58,7 +61,8 @@ const controllers = [
     WorkplaceController,
     CommonController,
     RelationshipController,
-    FriendRequestController
+    FriendRequestController,
+    NotificationController
 ];
 
 const entities = [
@@ -74,7 +78,8 @@ const entities = [
     ENTITIES_CONFIG.POST_LIKED_USERS,
     ENTITIES_CONFIG.DEVICE,
     ENTITIES_CONFIG.RELATIONSHIP,
-    ENTITIES_CONFIG.FRIEND_REQUEST
+    ENTITIES_CONFIG.FRIEND_REQUEST,
+    ENTITIES_CONFIG.NOTIFICATION
 ]
 
 const providers = [
@@ -145,6 +150,10 @@ const providers = [
             provide: REPOSITORY_INTERFACE.IFRIEND_REQUEST_REPOSITORY,
             useClass: FriendRequestRepository
         },
+        {
+            provide: REPOSITORY_INTERFACE.INOTIFICATION_REPOSITORY,
+            useClass: NotificationRepository
+        },
 
         //service
         {
@@ -198,6 +207,10 @@ const providers = [
         {
             provide: SERVICE_INTERFACE.IFRIEND_REQUEST_SERVICE,
             useClass: FriendRequestService
+        },
+        {
+            provide: SERVICE_INTERFACE.INOTIFICATION_SERVICE,
+            useClass: NotificationService
         },
         //Provider
 

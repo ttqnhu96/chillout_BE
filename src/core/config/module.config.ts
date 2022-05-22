@@ -3,6 +3,7 @@ import { CreateCollegeRequest } from "../dtos/requests/college/create-college.re
 import { CreateCommentRequest } from "../dtos/requests/comment/create-comment.request";
 import { UpdateCommentRequest } from "../dtos/requests/comment/update-comment.request";
 import { CreateFriendRequestRequest } from "../dtos/requests/friend-request/create-friend-request.request";
+import { CreateNotificationRequest } from "../dtos/requests/notification/create-notification.request";
 import { CreatePostRequest } from "../dtos/requests/post/create-post.request";
 import { UpdatePostRequest } from "../dtos/requests/post/update-post.request";
 import { UpdateAvatarRequest } from "../dtos/requests/profile/update-avatar.request";
@@ -16,6 +17,7 @@ import { CollegeEntity } from "../entities/college.entity";
 import { CommentEntity } from "../entities/comment.entity";
 import { DeviceEntity } from "../entities/device.entity";
 import { FriendRequestEntity } from "../entities/friend-request.entity";
+import { NotificationEntity } from "../entities/notification.entity";
 import { PhotoEntity } from "../entities/photo.entity";
 import { PostLikedUsersEntity } from "../entities/post-liked-users.entity";
 import { PostEntity } from "../entities/post.entity";
@@ -38,7 +40,8 @@ export const ENTITIES_CONFIG = {
     POST_LIKED_USERS: PostLikedUsersEntity,
     DEVICE: DeviceEntity,
     RELATIONSHIP: RelationshipEntity,
-    FRIEND_REQUEST: FriendRequestEntity
+    FRIEND_REQUEST: FriendRequestEntity,
+    NOTIFICATION: NotificationEntity
 }
 
 export const SERVICE_INTERFACE = {
@@ -54,7 +57,8 @@ export const SERVICE_INTERFACE = {
     IUPLOAD_SERVICE: 'IUploadService',
     ICOMMENT_SERVICE: 'ICommentService',
     IRELATIONSHIP_SERVICE: 'IRelationshipService',
-    IFRIEND_REQUEST_SERVICE: 'IFriendRequestService'
+    IFRIEND_REQUEST_SERVICE: 'IFriendRequestService',
+    INOTIFICATION_SERVICE: 'INotificationService'
 }
 
 export const REPOSITORY_INTERFACE = {
@@ -70,7 +74,8 @@ export const REPOSITORY_INTERFACE = {
     IPOST_LIKED_USERS_REPOSITORY: 'IPostLikedUsersRepository',
     IDEVICE_REPOSITORY: 'IDeviceRepository',
     IRELATIONSHIP_REPOSITORY: 'IRelationshipRepository',
-    IFRIEND_REQUEST_REPOSITORY: 'IFriendRequestRepository'
+    IFRIEND_REQUEST_REPOSITORY: 'IFriendRequestRepository',
+    INOTIFICATION_REPOSITORY: 'INotificationRepository',
 }
 
 export const REQUEST_CONFIG = {
@@ -87,6 +92,7 @@ export const REQUEST_CONFIG = {
     CREATE_SCHOOL_REQUEST: CreateSchoolRequest,
     CREATE_WORKPLACE_REQUEST: CreateWorkplaceRequest,
     CREATE_FRIEND_REQUEST_REQUEST: CreateFriendRequestRequest,
+    CREATE_NOTIFICATION_REQUEST: CreateNotificationRequest,
 }
 
 export module MODULE_REQUEST {
@@ -103,4 +109,5 @@ export module MODULE_REQUEST {
     export abstract class CreateSchoolAbstractRequest extends REQUEST_CONFIG.CREATE_SCHOOL_REQUEST { }
     export abstract class CreateWorkplaceAbstractRequest extends REQUEST_CONFIG.CREATE_WORKPLACE_REQUEST { }
     export abstract class CreateFriendRequestAbstractRequest extends REQUEST_CONFIG.CREATE_FRIEND_REQUEST_REQUEST { }
+    export abstract class CreateNotificationAbstractRequest extends REQUEST_CONFIG.CREATE_NOTIFICATION_REQUEST { }
 }
