@@ -8,7 +8,7 @@ import { IRelationshipService } from "../irelationship.service";
 import { IRelationshipRepository } from "../../repositories/irelationship.repository";
 import { GetSuggestionsListRequest } from "../../dtos/requests/relationship/get-suggestions-list.request";
 import { GetFriendListRequest } from "../../dtos/requests/relationship/get-friend-list.request";
-import { GetRelationshipRequest } from "src/core/dtos/requests/relationship/get-relationship.request";
+import { GetRelationshipRequest } from "../../dtos/requests/relationship/get-relationship.request";
 
 @Injectable()
 export class RelationshipService extends BaseService implements IRelationshipService {

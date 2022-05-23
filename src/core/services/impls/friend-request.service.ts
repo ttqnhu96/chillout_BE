@@ -10,9 +10,9 @@ import { IFriendRequestService } from "../ifriend-request.service";
 import { CreateFriendRequestRequest } from "../../dtos/requests/friend-request/create-friend-request.request";
 import { IFriendRequestRepository } from "../../repositories/ifriend-request.repository";
 import { GetReceivedFriendRequestListRequest } from "../../dtos/requests/friend-request/get-received-friend-request-list.request";
-import { ORDER_BY, RELATIONSHIP_TYPE_ENUM } from "../../common/constants/common.constant";
-import { RelationshipEntity } from "src/core/entities/relationship.entity";
-import { IRelationshipRepository } from "src/core/repositories/irelationship.repository";
+import { RELATIONSHIP_TYPE_ENUM } from "../../common/constants/common.constant";
+import { RelationshipEntity } from "../../entities/relationship.entity";
+import { IRelationshipRepository } from "../../repositories/irelationship.repository";
 
 @Injectable()
 export class FriendRequestService extends BaseService implements IFriendRequestService {

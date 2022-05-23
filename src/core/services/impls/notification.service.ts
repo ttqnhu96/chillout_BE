@@ -7,7 +7,7 @@ import { BaseService } from "./base.service";
 import { AutoMapperUtil } from "../../utils/auto-mapper/auto-mapper.util";
 import { MAPPER_CONFIG } from "../../config/mapper.config";
 import { INotificationService } from "../inotification.service";
-import { INotificationRepository } from "src/core/repositories/inotification.repository";
+import { INotificationRepository } from "../../repositories/inotification.repository";
 import { GetNotificationListByReceiverIdRequest } from "../../dtos/requests/notification/get-notification-list-by-receiver-id.request";
 import { CreateNotificationRequest } from "../../dtos/requests/notification/create-notification.request";
 

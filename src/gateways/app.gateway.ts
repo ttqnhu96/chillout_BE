@@ -1,8 +1,5 @@
-import { HttpException, HttpStatus, Inject, Logger } from '@nestjs/common';
+import { Inject, Logger } from '@nestjs/common';
 import {
-    OnGatewayConnection,
-    OnGatewayDisconnect,
-    OnGatewayInit,
     MessageBody,
     SubscribeMessage,
     WebSocketGateway,
@@ -19,15 +16,13 @@ import {
     LikePostMessageResponseInterface,
     LikePostNotificationResponseInterface
 } from './interfaces/messages.interface';
-import { from, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { JwtService } from '@nestjs/jwt';
-import { IDeviceRepository } from 'src/core/repositories/idevice.repository';
-import { REPOSITORY_INTERFACE } from 'src/core/config/module.config';
-import { DeviceEntity } from 'src/core/entities/device.entity';
-import { IPostRepository } from 'src/core/repositories/ipost.repository';
-import { IPostLikedUsersRepository } from 'src/core/repositories/ipost-liked-users.repository';
-import { ORDER_BY } from 'src/core/common/constants/common.constant';
+import { IDeviceRepository } from '../core/repositories/idevice.repository';
+import { REPOSITORY_INTERFACE } from '../core/config/module.config';
+import { DeviceEntity } from '../core/entities/device.entity';
+import { IPostRepository } from '../core/repositories/ipost.repository';
+import { IPostLikedUsersRepository } from '../core/repositories/ipost-liked-users.repository';
+import { ORDER_BY } from '../core/common/constants/common.constant';
 const options = {
     cors: {
         origin: ["http://localhost:3000", "example2.com"],
@@ -98,8 +93,8 @@ export class AppGateway
 
     @SubscribeMessage('client-add-comment')
     async addCommentNotification(@MessageBody() payload: CommentNotifyRequestInterface): Promise<any> {
-        const Post = await this._postRepos.findOne({ id: payload.data.postId, isDeleted: false });
-        const device = await this._deviceRepos.findOne({ userId: Post.userId, isDeleted: false });
+        const post = await this._postRepos.findOne({ id: payload.data.postId, isDeleted: false });
+        const device = await this._deviceRepos.findOne({ userId: post.userId, isDeleted: false });
         const data: CommentNotifyResponseInterface = {
             postId: payload.data.postId,
             fromUserName: payload.data.fromUserName,
@@ -115,8 +110,8 @@ export class AppGateway
 
     @SubscribeMessage('client-update-comment')
     async updateCommentNotification(@MessageBody() payload: CommentNotifyRequestInterface): Promise<any> {
-        const Post = await this._postRepos.findOne({ id: payload.data.postId, isDeleted: false });
-        const device = await this._deviceRepos.findOne({ userId: Post.userId, isDeleted: false });
+        const post = await this._postRepos.findOne({ id: payload.data.postId, isDeleted: false });
+        const device = await this._deviceRepos.findOne({ userId: post.userId, isDeleted: false });
         const data: CommentNotifyResponseInterface = {
             postId: payload.data.postId,
             fromUserName: payload.data.fromUserName,
@@ -129,25 +124,26 @@ export class AppGateway
     @SubscribeMessage('client-like-post')
     async reactNotification(@MessageBody() payload: ReactNotifyRequestInterface): Promise<any> {
         this._logger.log('client-like-post: payload, type: LIKE_POST_MESSAGE_FROM_SERVER', payload);
-        const Post = await this._postRepos.findOne({ id: payload.data.postId, isDeleted: false });
-        const device = await this._deviceRepos.findOne({ userId: Post.userId, isDeleted: false });
+        const post = await this._postRepos.findOne({ id: payload.data.postId, isDeleted: false });
+        const device = await this._deviceRepos.findOne({ userId: post.userId, isDeleted: false });
         const result = await this._postLikedUsersRepos.findByCondition(
             {
                 postId: payload.data.postId,
                 isDeleted: false
             },
-            { createdAt: ORDER_BY.DESC });
-        {
-            const data: LikePostMessageResponseInterface = {
-                postId: payload.data.postId,
-                likes: result.length,
-                userIdLikePostList: result.map(item => item.userId),
-                fromUserName: payload.data.fromUserName,
-                fromUserId: payload.data.fromUserId
-            }
-            this._logger.log('client-like-post: emit message, type: LIKE_POST_MESSAGE_FROM_SERVER');
-            this.server.emit('message', { type: 'LIKE_POST_MESSAGE_FROM_SERVER', data });
+            { createdAt: ORDER_BY.DESC }
+        );
+
+        const data: LikePostMessageResponseInterface = {
+            postId: payload.data.postId,
+            likes: result.length,
+            userIdLikePostList: result.map(item => item.userId),
+            fromUserName: payload.data.fromUserName,
+            fromUserId: payload.data.fromUserId
         }
+        this._logger.log('client-like-post: emit message, type: LIKE_POST_MESSAGE_FROM_SERVER');
+        this.server.emit('message', { type: 'LIKE_POST_MESSAGE_FROM_SERVER', data });
+        
         if (device) {
             const data: LikePostNotificationResponseInterface = {
                 like: payload.data.like,

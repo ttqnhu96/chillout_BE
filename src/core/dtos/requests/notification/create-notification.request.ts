@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsEnum, IsInt, IsNotEmpty, IsString } from "class-validator";
-import { NOTIFICATION_ACTION_ENUM, OBJECT_TYPE_ENUM } from "src/core/common/constants/common.constant";
+import { NOTIFICATION_ACTION_ENUM, OBJECT_TYPE_ENUM } from "../../../common/constants/common.constant";
 
 export class CreateNotificationRequest {
     @IsNotEmpty({message: 'Executor id is required'})

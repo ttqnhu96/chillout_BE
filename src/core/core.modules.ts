@@ -36,7 +36,7 @@ import { CommentRepository } from "./repositories/impls/comment.repository";
 import { PostLikedUsersRepository } from "./repositories/impls/post-liked-users.repository";
 import { CommonController } from "./controllers/common.controller";
 import { CommonService } from "./services/impls/common.service";
-import { AppGateway } from "src/gatewaies/app.gateway";
+import { AppGateway } from "../gateways/app.gateway";
 import { DeviceRepository } from "./repositories/impls/device.repository";
 import { RelationshipRepository } from "./repositories/impls/relationship.repository";
 import { RelationshipService } from "./services/impls/relationship.service";

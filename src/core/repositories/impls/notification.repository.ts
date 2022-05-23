@@ -4,7 +4,7 @@ import { ENTITIES_CONFIG } from "../../config/module.config";
 import { BaseRepository } from "../../repositories/impls/base.repository";
 import { ObjectLiteral, Repository } from "typeorm";
 import { INotificationRepository } from "../inotification.repository";
-import { GetNotificationListByReceiverIdRequest } from "src/core/dtos/requests/notification/get-notification-list-by-receiver-id.request";
+import { GetNotificationListByReceiverIdRequest } from "../../dtos/requests/notification/get-notification-list-by-receiver-id.request";
 
 @Injectable()
 export class NotificationRepository extends BaseRepository implements INotificationRepository {

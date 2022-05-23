@@ -13,7 +13,7 @@ import { ICommentService } from "../icomment.service";
 import { CreateCommentRequest } from "../../dtos/requests/comment/create-comment.request";
 import { UpdateCommentRequest } from "../../dtos/requests/comment/update-comment.request";
 import { GetCommentListByPostIdRequest } from "../../dtos/requests/comment/get-comment-list-by-post-id.request";
-import { PaginatorResponse } from "src/core/dtos/responses/paginator-response.dto";
+import { PaginatorResponse } from "../../dtos/responses/paginator-response.dto";
 
 @Injectable()
 export class CommentService extends BaseService implements ICommentService {

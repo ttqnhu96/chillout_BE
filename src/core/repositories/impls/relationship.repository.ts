@@ -5,9 +5,8 @@ import { BaseRepository } from "./base.repository";
 import { ObjectLiteral, Repository } from "typeorm";
 import { IRelationshipRepository } from "../irelationship.repository";
 import { GetSuggestionsListRequest } from "../../dtos/requests/relationship/get-suggestions-list.request";
-import { GetFriendListRequest } from "src/core/dtos/requests/relationship/get-friend-list.request";
-import { GetRelationshipRequest } from "src/core/dtos/requests/relationship/get-relationship.request";
-import { RELATIONSHIP_TYPE_ENUM } from "src/core/common/constants/common.constant";
+import { GetFriendListRequest } from "../../dtos/requests/relationship/get-friend-list.request";
+import { RELATIONSHIP_TYPE_ENUM } from "../../common/constants/common.constant";
 
 @Injectable()
 export class RelationshipRepository extends BaseRepository implements IRelationshipRepository {

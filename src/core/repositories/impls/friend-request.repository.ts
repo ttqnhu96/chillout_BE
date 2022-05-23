@@ -4,7 +4,7 @@ import { ENTITIES_CONFIG } from "../../config/module.config";
 import { BaseRepository } from "./base.repository";
 import { ObjectLiteral, Repository } from "typeorm";
 import { IFriendRequestRepository } from "../ifriend-request.repository";
-import { GetReceivedFriendRequestListRequest } from "src/core/dtos/requests/friend-request/get-received-friend-request-list.request";
+import { GetReceivedFriendRequestListRequest } from "../../dtos/requests/friend-request/get-received-friend-request-list.request";
 
 @Injectable()
 export class FriendRequestRepository extends BaseRepository implements IFriendRequestRepository {
