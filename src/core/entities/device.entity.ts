@@ -12,6 +12,9 @@ export class DeviceEntity extends BaseEntityAutoId {
     @Column({ name: 'user_name' })
     userName: string;
 
+    @Column({ name: 'is_connected' })
+    isConnected: boolean;
+
     @Column({ name: 'is_deleted' })
     isDeleted: boolean;
 }

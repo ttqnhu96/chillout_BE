@@ -14,6 +14,7 @@ import { UpdateAvatarRequest } from "../../dtos/requests/profile/update-avatar.r
 import { SearchRequest } from "../../dtos/requests/common/search.request";
 import { IRelationshipRepository } from "../../repositories/irelationship.repository";
 import { IFriendRequestRepository } from "../../repositories/ifriend-request.repository";
+import { FirebaseUploadFileUtil } from "../../utils/firebase/firebase-upload-file.util";
 
 @Injectable()
 export class ProfileService extends BaseService implements IProfileService {
@@ -22,7 +23,8 @@ export class ProfileService extends BaseService implements IProfileService {
     constructor(@Inject(REPOSITORY_INTERFACE.IPROFILE_REPOSITORY) private _profileRepos: IProfileRepository,
         @Inject(REPOSITORY_INTERFACE.IUSER_REPOSITORY) private _userRepos: IUserRepository,
         @Inject(REPOSITORY_INTERFACE.IRELATIONSHIP_REPOSITORY) private _relationshipRepos: IRelationshipRepository,
-        @Inject(REPOSITORY_INTERFACE.IFRIEND_REQUEST_REPOSITORY) private _friendRequestRepos: IFriendRequestRepository) {
+        @Inject(REPOSITORY_INTERFACE.IFRIEND_REQUEST_REPOSITORY) private _friendRequestRepos: IFriendRequestRepository,
+        private _uploadFileUtil: FirebaseUploadFileUtil) {
         super(_profileRepos);
         this._logger.log("============== Constructor ProfileService ==============");
     }
@@ -40,7 +42,7 @@ export class ProfileService extends BaseService implements IProfileService {
             if (!profile) {
                 return res.return(ErrorMap.E007.Code);
             }
-
+            profile.avatar = await this._uploadFileUtil.generateSignedUrl(profile.avatar)
             return res.return(ErrorMap.SUCCESSFUL.Code, profile);
         } catch (error) {
             this._logger.error(`${ErrorMap.E500.Code}: ${ErrorMap.E500.Message}`);
@@ -63,6 +65,10 @@ export class ProfileService extends BaseService implements IProfileService {
             if (!profile) {
                 return res.return(ErrorMap.E007.Code);
             }
+            
+            let result = profile[0];
+            result.avatar = await this._uploadFileUtil.generateSignedUrl(result.avatar);
+
             // Get user ids in friend list
             const friendList = await this._relationshipRepos.getFriendList({
                 userId: profile[0].userId,
@@ -71,7 +77,6 @@ export class ProfileService extends BaseService implements IProfileService {
                 pageSize: 0
             })
             const friendListUserId = friendList?.map(item => { return item.userId })
-            let result = profile[0];
             result['friendListUserId'] = friendListUserId;
 
             // // Get sender ids in received request list

@@ -47,6 +47,7 @@ import { FriendRequestService } from "./services/impls/friend-request.service";
 import { NotificationController } from "./controllers/notification.controller";
 import { NotificationService } from "./services/impls/notification.service";
 import { NotificationRepository } from "./repositories/impls/notification.repository";
+import { FirebaseUploadFileUtil } from "./utils/firebase/firebase-upload-file.util";
 
 const controllers = [
     UserController,
@@ -84,6 +85,7 @@ const entities = [
 
 const providers = [
     S3UploadFileUtil,
+    FirebaseUploadFileUtil,
     AppGateway
 ]
 

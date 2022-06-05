@@ -4,10 +4,10 @@ import { NOTIFICATION_ACTION_ENUM, OBJECT_TYPE_ENUM } from "../common/constants/
 
 @Entity({ name: 'notification' })
 export class NotificationEntity extends BaseEntityAutoId {
-    @Column({name: 'executor_id'})
+    @Column({ name: 'executor_id' })
     executorId: number;
 
-    @Column({name: 'receiver_id'})
+    @Column({ name: 'receiver_id' })
     receiverId: number;
 
     @Column({
@@ -24,11 +24,14 @@ export class NotificationEntity extends BaseEntityAutoId {
     })
     objectType: OBJECT_TYPE_ENUM;
 
-    @Column({name: 'object_id'})
+    @Column({ name: 'object_id' })
     objectId: number;
 
-    @Column({name: 'message'})
+    @Column({ name: 'message' })
     message: string;
+
+    @Column({ name: 'is_read', default: false })
+    isRead: boolean;
 
     @Column({ name: 'is_deleted' })
     isDeleted: boolean;

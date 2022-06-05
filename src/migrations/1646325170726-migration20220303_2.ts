@@ -66,7 +66,9 @@ export class migration2022030321646325170726 implements MigrationInterface {
             (60, 'Tuyên Quang', 1, '', ''),
             (61, 'Vĩnh Long', 1, '', ''),
             (62, 'Vĩnh Phúc', 1, '', ''),
-            (63, 'Yên Bái', 1, '', '')
+            (63, 'Yên Bái', 1, '', ''),
+            (64, 'Tokyo', 1, '', ''),
+            (65, 'Osaka', 1, '', '')
             `);
         await queryRunner.query(`INSERT INTO school(Id, name, is_active, created_by, updated_by) VALUES 
             (1, 'THPT Cầu Kè', 1, '', ''),

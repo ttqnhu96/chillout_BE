@@ -1,13 +1,13 @@
 import { Injectable, Logger } from "@nestjs/common";
+import { FirebaseUploadFileUtil } from "../../utils/firebase/firebase-upload-file.util";
 import { ErrorMap } from "../../common/error.map";
 import { ResponseDto } from "../../dtos/responses/response.dto";
-import { S3UploadFileUtil } from "../../utils/aws-s3/s3-upload-file.util";
 import { IUploadFileService } from "../iupload-file.service";
 
 @Injectable()
 export class UploadFileService implements IUploadFileService {
     private readonly _logger = new Logger(UploadFileService.name);
-    constructor(private _uploadFileUtil: S3UploadFileUtil) {
+    constructor(private _uploadFileUtil: FirebaseUploadFileUtil) {
     }
 
     /**
@@ -37,7 +37,11 @@ export class UploadFileService implements IUploadFileService {
         this._logger.log("============== Upload multi file ==============");
         const res = new ResponseDto;
         try {
-            const result = await this._uploadFileUtil.uploadMulti(folderName, files);
+            let result = [];
+            for(let i = 0; i < files.length ; i++){
+                const fileName = await this._uploadFileUtil.upload(folderName, files[i].buffer, files[i].originalname);
+                result.push(fileName);
+            }
             return res.return(ErrorMap.SUCCESSFUL.Code, result);
         } catch (error) {
             this._logger.error(`${ErrorMap.E500.Code}: ${ErrorMap.E500.Message}`);
