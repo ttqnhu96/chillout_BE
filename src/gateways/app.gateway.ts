@@ -26,22 +26,22 @@ import {
     AcceptFriendMessageResponseInterface
 } from './interfaces/messages.interface';
 import { JwtService } from '@nestjs/jwt';
-import { IDeviceRepository } from 'src/core/repositories/idevice.repository';
-import { REPOSITORY_INTERFACE, SERVICE_INTERFACE } from 'src/core/config/module.config';
-import { DeviceEntity } from 'src/core/entities/device.entity';
-import { IPostRepository } from 'src/core/repositories/ipost.repository';
-import { IPostLikedUsersRepository } from 'src/core/repositories/ipost-liked-users.repository';
-import { ORDER_BY } from 'src/core/common/constants/common.constant';
-import { IProfileService } from 'src/core/services/iprofile.service';
-import databaseConfig from 'src/core/config/database.config';
+import { IDeviceRepository } from '../core/repositories/idevice.repository';
+import { REPOSITORY_INTERFACE, SERVICE_INTERFACE } from '../core/config/module.config';
+import { DeviceEntity } from '../core/entities/device.entity';
+import { IPostRepository } from '../core/repositories/ipost.repository';
+import { IPostLikedUsersRepository } from '../core/repositories/ipost-liked-users.repository';
+import { ORDER_BY } from '../core/common/constants/common.constant';
+import { IProfileService } from '../core/services/iprofile.service';
+
 const options = {
     cors: {
-        origin: ["http://localhost:3000", "example2.com"],
+        origin: ["http://localhost:3000"],
         methods: ["GET", "POST"],
         credentials: true
     }
 }
-// let user = { name: '', id: 0 };
+
 @WebSocketGateway(3006, options)
 export class AppGateway
 // implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
@@ -64,22 +64,23 @@ export class AppGateway
         this._logger.log(client.id, 'Connected..............................');
         let authToken: any = client.handshake?.query?.token ?? '';
         try {
-            const decoded = this.jwtService.verify(authToken);
-            // user.name = decoded.username;
-            // user.id = decoded.id;
-            const device = await this._deviceRepos.findOne({ userId: decoded.id, isDeleted: false })
+            const authTokenDecoded = this.jwtService.verify(authToken);
+            const userId = authTokenDecoded.id;
+            const username = authTokenDecoded.username;
+
+            const device = await this._deviceRepos.findOne({ userId: userId, isDeleted: false })
             if (device) {
                 device.socketId = client.id;
                 await this._deviceRepos.update(device)
             } else {
                 const newDevice = new DeviceEntity;
                 newDevice.socketId = client.id;
-                newDevice.userId = decoded.id;
+                newDevice.userId = userId;
                 newDevice.isDeleted = false;
-                newDevice.userName = decoded.username;
+                newDevice.userName = username;
                 await this._deviceRepos.create(newDevice)
             }
-            this._logger.log('decoded', decoded);
+            this._logger.log('authTokenDecoded', authTokenDecoded);
         } catch (ex) {
             this._logger.log('error', ex);
         }
@@ -88,25 +89,25 @@ export class AppGateway
     async handleDisconnect(client: Socket) {
         this._logger.log(client.id, 'Disconnect');
     }
-    @SubscribeMessage('client-message')
-    async messagesReceive(@MessageBody() payload: MessagesRequestInterface): Promise<any> {
-        const toUserId = payload.data.toUserId;
-        const device = await this._deviceRepos.findOne({ userId: toUserId, isDeleted: false });
-        if (device) {
-            const data: MessagesResponseInterface = {
-                message: payload.data.message,
-                fromUserName: device.userName,
-                fromUserId: device.userId
-            }
-            this._logger.log('client-message: emit message, type: MESSAGE_NOTIFICATION_RECEIVED');
-            this.server.to(device.socketId).emit('message', { type: 'MESSAGE_NOTIFICATION_RECEIVED', data });
-        }
-    }
+    // @SubscribeMessage('client-message')
+    // async messagesReceive(@MessageBody() payload: MessagesRequestInterface): Promise<any> {
+    //     const toUserId = payload.data.toUserId;
+    //     const device = await this._deviceRepos.findOne({ userId: toUserId, isDeleted: false });
+    //     if (device) {
+    //         const data: MessagesResponseInterface = {
+    //             message: payload.data.message,
+    //             fromUserName: device.userName,
+    //             fromUserId: device.userId
+    //         }
+    //         this._logger.log('client-message: emit message, type: MESSAGE_NOTIFICATION_RECEIVED');
+    //         this.server.to(device.socketId).emit('message', { type: 'MESSAGE_NOTIFICATION_RECEIVED', data });
+    //     }
+    // }
 
     @SubscribeMessage('client-add-comment')
     async addCommentNotification(@MessageBody() payload: CommentNotifyRequestInterface): Promise<any> {
-        const Post = await this._postRepos.findOne({ id: payload.data.postId, isDeleted: false });
-        const device = await this._deviceRepos.findOne({ userId: Post.userId, isDeleted: false });
+        const post = await this._postRepos.findOne({ id: payload.data.postId, isDeleted: false });
+        const device = await this._deviceRepos.findOne({ userId: post.userId, isDeleted: false });
         const data: CommentNotifyResponseInterface = {
             postId: payload.data.postId,
             fromUserName: payload.data.fromUserName,
@@ -122,8 +123,8 @@ export class AppGateway
 
     @SubscribeMessage('client-update-comment')
     async updateCommentNotification(@MessageBody() payload: CommentNotifyRequestInterface): Promise<any> {
-        const Post = await this._postRepos.findOne({ id: payload.data.postId, isDeleted: false });
-        const device = await this._deviceRepos.findOne({ userId: Post.userId, isDeleted: false });
+        const post = await this._postRepos.findOne({ id: payload.data.postId, isDeleted: false });
+        // const device = await this._deviceRepos.findOne({ userId: post.userId, isDeleted: false });
         const data: CommentNotifyResponseInterface = {
             postId: payload.data.postId,
             fromUserName: payload.data.fromUserName,
@@ -136,8 +137,8 @@ export class AppGateway
     @SubscribeMessage('client-like-post')
     async reactNotification(@MessageBody() payload: ReactNotifyRequestInterface): Promise<any> {
         this._logger.log('client-like-post: payload, type: LIKE_POST_MESSAGE_FROM_SERVER', payload);
-        const Post = await this._postRepos.findOne({ id: payload.data.postId, isDeleted: false });
-        const device = await this._deviceRepos.findOne({ userId: Post.userId, isDeleted: false });
+        const post = await this._postRepos.findOne({ id: payload.data.postId, isDeleted: false });
+        const device = await this._deviceRepos.findOne({ userId: post.userId, isDeleted: false });
         const result = await this._postLikedUsersRepos.findByCondition(
             {
                 postId: payload.data.postId,
