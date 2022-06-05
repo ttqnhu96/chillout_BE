@@ -1,7 +1,7 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { ConfigService } from "../../../shared/services/config.service";
-import admin from "firebase-admin";
-const serviceAccount = require('./serviceAccountKey.json');
+import admin, { ServiceAccount } from "firebase-admin";
+import * as serviceAccount from './serviceAccountKey.json';
 
 @Injectable()
 export class FirebaseUploadFileUtil {
@@ -11,6 +11,7 @@ export class FirebaseUploadFileUtil {
     constructor(public _configService: ConfigService) {
         this._logger.log("============== Constructor FirebaseUploadFileUtil ==============");
         this._bucket = _configService.get("FIREBASE_BUCKET_NAME");
+
         admin.initializeApp({
             credential: admin.credential.cert(serviceAccount),
             storageBucket: this._bucket
@@ -18,38 +19,25 @@ export class FirebaseUploadFileUtil {
         this._storage = admin.storage().bucket();
     }
 
-    public async generateSignedUrl(fileName: string) {
-        if(!fileName) {
-            return '';
-        }
-
-        try {
-            // These options will allow temporary read access to the file
-            const options = {
-                version: 'v2', // defaults to 'v2' if missing.
-                action: 'read',
-                expires: Date.now() + 1000 * 60 * 60, // one hour
-            };
-    
-            // Get a v2 signed URL for the file
-            const [url] = await this._storage.file(fileName)
-                .getSignedUrl(options);
-    
-            console.log(`The signed url for ${fileName} is ${url}.`);
-            return url;
-        } catch (error) {
-            this._logger.error(`Error: ${error}`);
-            this._logger.error(`File name: ${fileName}`);
-            return '';
-        }
-    }
-
     public async upload(folder: string, file: any, fileName: string): Promise<string> {
         try {
+            
             const key = this.generateFileName(fileName, folder);
-            await this._storage.file(key).save(file);
-            console.log(`${fileName} uploaded.`);
-            return key;
+            const options = {
+                destination: key,
+                predefinedAcl: 'publicRead',
+              };
+            const res = this._storage.file(key);
+            await res.save(file,{
+                metadata: {
+                  contentType: 'image/png;image/jpeg',
+                },
+                predefinedAcl: 'publicRead'
+            });
+            const metaData = await res.getMetadata();
+            const url = metaData[0].mediaLink;
+            return url;
+            // return this.generateSignedUrl(key);
         } catch (error) {
             this.throwError(error);
         }

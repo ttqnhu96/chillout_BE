@@ -42,7 +42,6 @@ export class ProfileService extends BaseService implements IProfileService {
             if (!profile) {
                 return res.return(ErrorMap.E007.Code);
             }
-            profile.avatar = await this._uploadFileUtil.generateSignedUrl(profile.avatar)
             return res.return(ErrorMap.SUCCESSFUL.Code, profile);
         } catch (error) {
             this._logger.error(`${ErrorMap.E500.Code}: ${ErrorMap.E500.Message}`);
@@ -67,7 +66,7 @@ export class ProfileService extends BaseService implements IProfileService {
             }
             
             let result = profile[0];
-            result.avatar = await this._uploadFileUtil.generateSignedUrl(result.avatar);
+            // result.avatar = await this._uploadFileUtil.generateSignedUrl(result.avatar);
 
             // Get user ids in friend list
             const friendList = await this._relationshipRepos.getFriendList({
