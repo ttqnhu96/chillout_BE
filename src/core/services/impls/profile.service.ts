@@ -66,7 +66,6 @@ export class ProfileService extends BaseService implements IProfileService {
             }
             
             let result = profile[0];
-            // result.avatar = await this._uploadFileUtil.generateSignedUrl(result.avatar);
 
             // Get user ids in friend list
             const friendList = await this._relationshipRepos.getFriendList({

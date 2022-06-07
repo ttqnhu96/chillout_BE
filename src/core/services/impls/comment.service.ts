@@ -146,9 +146,10 @@ export class CommentService extends BaseService implements ICommentService {
             const currentUserId = await this._commonUtil.getUserId();
             const comment = await this._commentRepos.findOne({
                 id: id,
-                userId: currentUserId,
+                // userId: currentUserId,
                 isDeleted: false
             });
+
             if (!comment) {
                 return res.return(ErrorMap.E011.Code);
             }
